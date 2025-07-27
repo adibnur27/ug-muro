@@ -3,7 +3,7 @@ import Navbar from '../../component/Navbar/Navbar'
 
 const Contact = () => {
   return (
-    <div>
+    <div className='bg-deepBlend h-screen text-white'>
       <Navbar/>
       This is Contact Page
     </div>

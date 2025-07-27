@@ -3,7 +3,7 @@ import Navbar from '../../component/Navbar/Navbar'
 
 const Research = () => {
   return (
-    <div>
+    <div className='bg-deepBlend h-screen text-white'>
       <Navbar/>
       This Is Research Page</div>
   )

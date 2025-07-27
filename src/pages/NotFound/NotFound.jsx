@@ -2,7 +2,7 @@ import React from 'react'
 
 const NotFound = () => {
   return (
-    <div>This Is NotFound Pages</div>
+    <div className='bg-deepBlend h-screen text-white'>This Is NotFound Pages</div>
   )
 }
 
