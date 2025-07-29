@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { HiMenu, HiX } from "react-icons/hi";
@@ -18,12 +18,37 @@ const Navbar = () => {
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
+  const [showNavbar, setShowNavbar] = useState(true);
+const lastScrollY = useRef(0);
+
+useEffect(() => {
+  const handleScroll = () => {
+    const currentScrollY = window.scrollY;
+
+    if (currentScrollY > lastScrollY.current && currentScrollY > 50) {
+      // scroll ke bawah, sembunyikan navbar
+      setShowNavbar(false);
+    } else {
+      // scroll ke atas, tampilkan navbar
+      setShowNavbar(true);
+    }
+
+    lastScrollY.current = currentScrollY;
+  };
+
+  window.addEventListener("scroll", handleScroll);
+
+  return () => {
+    window.removeEventListener("scroll", handleScroll);
+  };
+}, []);
+
   return (
-    <nav className="shadow-md  md:px-10 py-5 text-white fixed left-0 right-0 md:left-0 md:right-0 lg:left-10 lg:right-10 top-0 z-50 bg-black/70 md:bg-transparent ">
+    <nav className={`shadow-md md:px-10 pt-5 text-white fixed left-0 right-0 md:left-0 md:right-0 lg:left-10 lg:right-10 top-0 z-50 bg-black/70 md:bg-transparent transition-transform duration-700 ${showNavbar ? 'translate-y-0' : '-translate-y-full'}`}>
       <div className="flex justify-between items-center">
         {/* Logo */}
         <div className="flex gap-3 items-center ms-10 md:ms-0 lg:ms-0">
-          <div className="text-3xl md:text-4xl font-bold font-orbitron">UG MURO</div>
+          <img src="/images/logo.png" alt="logo" className="z-0 w-[15%]" />
           <div className="leading-tight flex flex-col justify-center">
             <h1 className="font-bold text-xs md:text-sm font-rajdhani">PUSAT STUDI</h1>
             <h1 className="font-bold text-xs md:text-sm font-rajdhani">MULTIMEDIA & ROBOTIKA</h1>
