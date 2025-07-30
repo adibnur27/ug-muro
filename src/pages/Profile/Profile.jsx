@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../../component/Navbar/Navbar";
 import GlobeRadar from "./ui/GlobeRadar";
+import Footer from "../../component/Footer/Footer";
 
 const Profile = () => {
   const [videoError, setVideoError] = useState(false);
@@ -94,6 +95,7 @@ const Profile = () => {
       <div className="h-screen bg-gradient-to-bl from-black via-deepBlend to-deepBlend">
         <p className="text-5xl text-center p-10"> Structure Organisasi</p>
       </div>
+      <Footer/>
     </div>
   );
 };
