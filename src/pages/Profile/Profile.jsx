@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../../component/Navbar/Navbar";
-import GlobeRadar from "./ui/GlobeRadar";
 import Footer from "../../component/Footer/Footer";
 
 const Profile = () => {
