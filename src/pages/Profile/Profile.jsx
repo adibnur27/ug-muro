@@ -42,7 +42,7 @@ const Profile = () => {
         )}
 
         {/* Fallback image untuk mobile atau saat video gagal */}
-        {(isMobile || videoError) && <img src="/images/fallbackBackground.png" alt="Fallback Background" className="absolute inset-0 w-full h-full object-cover z-0" />}
+        {(isMobile || videoError) && <img src="/images/background/fallbackBackground.png" alt="Fallback Background" className="absolute inset-0 w-full h-full object-cover z-0" />}
 
         {/* Foreground Content */}
         <div className="flex md:justify-start gap-32 items-center h-full z-10 relative text-white md:mx-16">
@@ -60,7 +60,7 @@ const Profile = () => {
           <img src="/images/logo.png" alt="robotic" className="z-0 w-[90%]" />
         </div>
         <div className="absolute z-0 bottom-0 md:w-1/2 right-0">
-          <img src="/images/robotic1.png" alt="robotic" className="z-0 w-[90%]" />
+          <img src="/images/background/robotic1.png" alt="robotic" className="z-0 w-[90%]" />
         </div>
         <div className="px-5 border-l-2 border-white flex flex-col gap-5 w-fit max-w-xl z-10">
           <h3 className="text-5xl font-orbitron"> VISI</h3>
