@@ -44,7 +44,7 @@ useEffect(() => {
 }, []);
 
   return (
-    <nav className={`shadow-md md:px-10 pt-5 text-white fixed left-0 right-0 md:left-0 md:right-0 lg:left-10 lg:right-10 top-0 z-50 bg-black/70 md:bg-transparent transition-transform duration-700 ${showNavbar ? 'translate-y-0' : '-translate-y-full'}`}>
+    <nav className={`shadow-md md:px-10 pt-5 text-white fixed left-0 right-0 md:left-0 md:right-0 lg:left-10 lg:right-10 top-0 z-50 bg-black/70 lg:bg-transparent transition-transform duration-700 ${showNavbar ? 'translate-y-0' : '-translate-y-full'}`}>
       <div className="flex justify-between items-center">
         {/* Logo */}
         <div className="flex gap-3 items-center ms-10 md:ms-0 lg:ms-0">
@@ -96,7 +96,7 @@ useEffect(() => {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: -10, opacity: 0 }}
           transition={{ duration: 0.2 }}
-          className="flex flex-col mt-4 md:hidden gap-2 text-center "
+          className="flex flex-col mt-4 lg:hidden gap-2 text-center "
         >
           {tabs.map((tab) => (
             <li key={tab.path}>
@@ -105,7 +105,7 @@ useEffect(() => {
                 onClick={() => setIsOpen(false)}
                 className={({ isActive }) =>
                   `text-lg font-semibold font-rajdhani ${
-                    isActive ? "text-white" : "text-gray-300"
+                    isActive ? "text-black bg-white px-40 rounded-md" : "text-gray-300"
                   }`
                 }
               >

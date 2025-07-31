@@ -25,7 +25,7 @@ const FormContact = () => {
   };
 
   return (
-    <form ref={form} onSubmit={sendEmail} className="grid grid-cols-1 md:grid-cols-2 gap-6 w-[55%] font-orbitron">
+    <form ref={form} onSubmit={sendEmail} className="grid grid-cols-1 md:grid-cols-2 gap-6 md:w-[55%] font-orbitron">
       <div>
         <label className="block mb-1">Name</label>
         <input name="name" type="text" className="font-rajdhani w-full bg-transparent border-b border-white outline-none p-1 placeholder-white" placeholder="Enter your name" required />
