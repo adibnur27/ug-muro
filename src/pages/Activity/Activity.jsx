@@ -8,9 +8,9 @@ const Activity = () => {
       <Navbar />
       {/*  Hero Section */}
       <section className="relative bg-cover bg-center h-[450px] text-white flex items-center justify-center" style={{ backgroundImage: "url('/images/background/registrationBg1.jpg')" }}>
-        <div className="bg-black bg-opacity-50 p-10 rounded-xl text-center max-w-2xl">
+        <div className=" p-10 rounded-xl text-center max-w-2xl">
           <h1 className="text-4xl font-bold font-orbitron">Aktivitas Kami</h1>
-          <p className="text-lg mt-4 font-rajdhani">Eksplorasi potensi melalui kursus, workshop, dan kompetisi berbasis teknologi. Belajar, berinovasi, dan berkompetisi bersama Pusat Studi Multimedia dan Robotika.</p>
+          <p className="text-2xl mt-4 font-rajdhani">Eksplorasi potensi melalui kursus, workshop, dan kompetisi berbasis teknologi. Belajar, berinovasi, dan berkompetisi bersama Pusat Studi Multimedia dan Robotika.</p>
         </div>
       </section>
 
@@ -36,7 +36,7 @@ const Activity = () => {
               image: "/images/course/mikrokontroler.jpg",
             },
           ].map((kursus, i) => (
-            <div key={i} className="bg-gray-100 shadow-lg rounded-xl overflow-hidden hover:shadow-xl transition hover:scale-[1.02]">
+            <div key={i} className="bg-gray-100 shadow-lg rounded-xl overflow-hidden hover:shadow-xl transition hover:scale-90">
               <img src={kursus.image} alt={kursus.title} className="h-48 w-full object-cover" />
               <div className="p-5">
                 <h3 className="text-xl font-semibold mb-2 text-black">{kursus.title}</h3>
