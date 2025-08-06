@@ -7,7 +7,7 @@ const Activity = () => {
     <div className="bg-deepBlend h-screen text-white">
       <Navbar />
       {/*  Hero Section */}
-      <section className="relative bg-cover bg-center h-[450px] text-white flex items-center justify-center" style={{ backgroundImage: "url('/images/background/registrationBg1.jpg')" }}>
+      <section className="relative bg-cover bg-center h-[450px] text-white flex items-center justify-center" style={{ backgroundImage: "url('/images/background/registrationBg1.webp')" }}>
         <div className=" p-10 rounded-xl text-center max-w-2xl">
           <h1 className="text-4xl font-bold font-orbitron">Aktivitas Kami</h1>
           <p className="text-2xl mt-4 font-rajdhani">Eksplorasi potensi melalui kursus, workshop, dan kompetisi berbasis teknologi. Belajar, berinovasi, dan berkompetisi bersama Pusat Studi Multimedia dan Robotika.</p>
@@ -23,17 +23,17 @@ const Activity = () => {
             {
               title: "Dasar Pemrograman IoT",
               desc: "Belajar pemrograman dasar Arduino dan sensor digital. Cocok untuk pemula yang ingin masuk ke dunia embedded system.",
-              image: "/images/course/arduino.jpg",
+              image: "/images/course/arduino.webp",
             },
             {
               title: "Pemrograman Python untuk Robotika",
               desc: "Menggunakan Raspberry Pi untuk automasi robotika berbasis Python.",
-              image: "/images/course/python.jpg",
+              image: "/images/course/python.webp",
             },
             {
               title: "Pengenalan Sistem Tertanam",
               desc: "Belajar arsitektur mikrokontroler, komunikasi serial, dan aplikasi praktis.",
-              image: "/images/course/mikrokontroler.jpg",
+              image: "/images/course/mikrokontroler.webp",
             },
           ].map((kursus, i) => (
             <div key={i} className="bg-gray-100 shadow-lg rounded-xl overflow-hidden hover:shadow-xl transition hover:scale-90">
@@ -56,16 +56,16 @@ const Activity = () => {
             { 
               title: "Drone Engineering", 
               desc: "Pelajari dasar pengoperasian dan perakitan drone secara langsung.", 
-              img: "/images/workshop/workshop-drone.jpg" 
+              img: "/images/workshop/workshop-drone.webp" 
             },
             { 
               title: "Mikon Agrotech", 
               desc: "Automasi pertanian dengan mikrokontroler. Solusi cerdas untuk pertanian modern.", 
-              img: "/images/workshop/workshop-agrotech.jpg" 
+              img: "/images/workshop/workshop-agrotech.webp" 
             },
-            { title: "Mikon Healthcare", desc: "Rancang prototipe alat kesehatan sederhana berbasis sensor biometrik.", img: "/images/workshop/workshop-health.jpg" },
+            { title: "Mikon Healthcare", desc: "Rancang prototipe alat kesehatan sederhana berbasis sensor biometrik.", img: "/images/workshop/workshop-health.webp" },
             { title: "Raspberry Pi Dasar", desc: "Belajar dasar Linux dan kendali GPIO dengan Raspberry Pi.", img: "/images/workshop/workshop-raspi.jpg" },
-            { title: "Robot Berbasis Raspberry", desc: "Bangun robot pintar berbasis Raspberry Pi dan Python.", img: "/images/workshop/workshop-robot.jpg" },
+            { title: "Robot Berbasis Raspberry", desc: "Bangun robot pintar berbasis Raspberry Pi dan Python.", img: "/images/workshop/workshop-robot.webp" },
             { title: "Computer Vision & Recognition", desc: "Pengenalan face/object recognition dengan OpenCV dan Python.", img: "/images/workshop/workshop-recognition.webp" },
           ].map((workshop, i) => (
             <div key={i} className="bg-white text-black rounded-xl overflow-hidden shadow-lg hover:scale-[1.02] transition">
@@ -88,7 +88,7 @@ const Activity = () => {
             ESC adalah ajang tahunan untuk mahasiswa dan siswa tingkat akhir yang ingin menunjukkan inovasi terbaik dalam bidang embedded system. Kompetisi ini meliputi kategori robotika, agroteknologi, dan healthcare dengan penilaian
             langsung dari praktisi industri dan akademisi.
           </p>
-          <img src="/images/workshop/workshop-robot.jpg" alt="ESC Competition" className="mx-auto rounded-lg shadow-xl max-h-[400px] object-cover" />
+          <img src="/images/workshop/workshop-robot.webp" alt="ESC Competition" className="mx-auto rounded-lg shadow-xl max-h-[400px] object-cover" />
           <div className="mt-6">
             <a href="/esc" className="inline-block bg-blue-700 hover:bg-blue-800 text-white font-semibold px-6 py-3 rounded-md">
               Lihat Detail Kompetisi

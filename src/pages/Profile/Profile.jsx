@@ -60,7 +60,7 @@ const Profile = () => {
           <img src="/images/logo.png" alt="robotic" className="z-0 w-[90%]" />
         </div>
         <div className="absolute z-0 bottom-0 md:w-1/2 right-0">
-          <img src="/images/background/robotic1.png" alt="robotic" className="z-0 w-[90%]" />
+          <img src="/images/background/robotic1.webp" alt="robotic" className="z-0 w-[90%]" />
         </div>
         <div className="px-5 border-l-2 border-white flex flex-col gap-5 w-fit max-w-xl z-10">
           <h3 className="text-5xl font-orbitron"> VISI</h3>

@@ -49,7 +49,7 @@ const WorkShopForm = () => {
         </form>
       </div>
       <div className="lg:w-2/5 w-full bg-white/50 bg-cover md:block hidden" style={{ backgroundImage: `url(/images/background/ContactBg1.jpg)`, opacity: "0.8" }}>
-        <img src="/images/background/robotic.png" alt="" className="mt-12" />
+        <img src="/images/background/robotic1.webp" alt="" className="mt-12" />
       </div>
     </div>
   );

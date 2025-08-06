@@ -8,17 +8,17 @@ const Research = () => {
     {
       title: "Artificial Intelligence & Machine Learning",
       description: "Pengembangan sistem cerdas untuk analisis data, pengenalan pola, dan prediksi berbasis model machine learning.",
-      image: "/images/course/python.jpg",
+      image: "/images/course/python.webp",
     },
     {
       title: "Robotika & Sistem Tertanam",
       description: "Penelitian dalam desain robot, sensor, aktuator, serta integrasi sistem tertanam menggunakan Raspberry Pi dan mikrokontroler.",
-      image: "/images/course/arduino.jpg",
+      image: "/images/course/arduino.webp",
     },
     {
       title: "Computer Vision & Image Processing",
       description: "Riset dalam pengolahan citra digital, deteksi objek, dan sistem pengenalan visual berbasis kamera dan sensor.",
-      image: "/images/course/mikrokontroler.jpg",
+      image: "/images/course/mikrokontroler.webp",
     },
   ];
 
@@ -27,19 +27,19 @@ const Research = () => {
       title: "Deteksi Penyakit Daun Berbasis CNN",
       year: "2024",
       category: "AI for Agriculture",
-      image: "/images/research/plant-disease.png",
+      image: "/images/research/plant-disease.webp",
     },
     {
       title: "Robot Pengantar Obat untuk Layanan Kesehatan",
       year: "2023",
       category: "Healthcare Robotics",
-      image: "/images/research/robot-health.jpg",
+      image: "/images/research/robot-health.webp",
     },
     {
       title: "Drone Monitoring untuk Pertanian Presisi",
       year: "2023",
       category: "Agricultural IoT",
-      image: "/images/research/robot-agri.jpg",
+      image: "/images/research/robot-agri.webp",
     },
   ];
 
@@ -62,7 +62,7 @@ const Research = () => {
     <div className="bg-deepBlend h-screen text-white">
       <Navbar />
 
-      <section className="relative bg-cover bg-center h-[400px] flex items-center justify-center text-white" style={{ backgroundImage: "url('/images/research/hero-bg.jpg')" }}>
+      <section className="relative bg-cover bg-center h-[400px] flex items-center justify-center text-white">
         <div className="w-full absolute inset-0 h-screen">
           <SparklesCore id="tsparticlesfullpage" background="transparent" minSize={0.6} maxSize={1.4} particleDensity={100} className="w-full h-full" particleColor="#FFFFFF" />
         </div>

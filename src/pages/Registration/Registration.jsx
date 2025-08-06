@@ -20,7 +20,7 @@ const Registration = () => {
         <div
           className={`absolute inset-0 bg-cover bg-center transition-opacity duration-1000 `}
           style={{
-            backgroundImage: `url(/images/background/registrationBg.jpg)`,
+            backgroundImage: `url(/images/background/registrationBg.webp)`,
           }}
         />
         <div className="relative z-10 text-white flex flex-col md:p-20 p-5 justify-center h-full">

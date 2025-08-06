@@ -5,7 +5,7 @@ import Footer from "../../component/Footer/Footer";
 import FormContact from "./formContact/FormContact";
 
 const Contact = () => {
-  const backgrounds = ["/images/background/ContactBg.jpg", "/images/background/ContactBg1.jpg", "/images/background/ContactBg2.jpg"];
+  const backgrounds = ["/images/background/ContactBg.webp", "/images/background/ContactBg1.webp", "/images/background/ContactBg2.webp"];
 
   const [bgIndex, setBgIndex] = useState(0);
   const [fade, setFade] = useState(true);
