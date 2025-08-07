@@ -101,13 +101,14 @@ const AdminDashboard = () => {
               })}
             </div>
           </div>
+          <div onClick={handleLogout} className="hover:bg-blue-50 px-1 cursor-pointer">
             <SidebarLink
               link={{
                 label: <p className="cursor-pointer">Logout</p>,
                 icon: <IconLogout className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />,
-                onClick: handleLogout, // tambahkan event ini
               }}
             />
+          </div>
         </SidebarBody>
       </Sidebar>
 
