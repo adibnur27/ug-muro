@@ -45,7 +45,7 @@ const AdminLogin = () => {
             timer: 2000,
             showConfirmButton: false,
           });
-          navigate("/adminDashboard");
+          navigate("/admin");
         } else {
           alert("kamu bukan admin");
         }

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import { checkIsAdmin, logout } from "../../service/authService";
 import { Sidebar, SidebarBody, SidebarLink } from "../../component/ui/sidebar"; // sesuaikan pathnya jika beda
-import { IconArrowLeft, IconBrandTabler, IconSettings, IconUser, IconUserBolt } from "@tabler/icons-react";
+import { IconArrowLeft, IconBrandTabler, IconHome, IconLayoutDashboard, IconLogout, IconNotebook, IconPhoto, IconSettings, IconTools, IconUser, IconUserBolt, IconUsersGroup } from "@tabler/icons-react";
 import { motion } from "framer-motion"; // atau dari motion/react kalau kamu pakai motion/react
 import { cn } from "@/lib/utils";
 import { LoaderOne } from "../../component/ui/loader";
@@ -29,7 +29,7 @@ const AdminDashboard = () => {
     };
     fetchAdminData();
   }, [navigate]);
-  console.log(user);
+
   const handleLogout = async () => {
     await logout();
     navigate("/adminLogin");
@@ -38,33 +38,33 @@ const AdminDashboard = () => {
   const links = [
     {
       label: "Dashboard",
-      href: "#",
-      icon: <IconBrandTabler className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />,
+      href: "/admin",
+      icon: <IconLayoutDashboard className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />,
+    },
+    {
+      label: "Admin Profile",
+      href: "/admin/adminProfile",
+      icon: <IconUser className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200 bg-gray-50 rounded-full" />,
     },
     {
       label: "Participants",
-      href: "#",
-      icon: <IconUserBolt className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />,
+      href: "/admin/participants",
+      icon: <IconUsersGroup className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />,
     },
     {
       label: "Workshop",
-      href: "#",
-      icon: <IconSettings className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />,
+      href: "/admin/workshop",
+      icon: <IconTools className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />,
     },
     {
       label: "Journal",
-      href: "#",
-      icon: <IconSettings className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />,
+      href: "/admin/journal",
+      icon: <IconNotebook className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />,
     },
     {
       label: "Album & Photos",
-      href: "#",
-      icon: <IconSettings className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />,
-    },
-    {
-      label: "Logout",
-      icon: <IconArrowLeft className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />,
-      onClick: handleLogout, // tambahkan event ini
+      href: "/admin/albums",
+      icon: <IconPhoto className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />,
     },
   ];
 
@@ -82,27 +82,38 @@ const AdminDashboard = () => {
           <div className="flex flex-1 flex-col overflow-x-hidden overflow-y-auto ">
             {open ? <Logo /> : <LogoIcon />}
             <div className="mt-8 flex flex-col gap-2">
-              {links.map((link, idx) => (
-                <div key={idx} onClick={link.onClick || (() => {})} className="hover:bg-blue-50 px-1 cursor-pointer">
-                  <SidebarLink link={link} />
-                </div>
-              ))}
+              {links.map((link, idx) => {
+                if (link.onClick) {
+                  // Tombol logout
+                  return (
+                    <div key={idx} onClick={link.onClick} className="hover:bg-blue-50 px-1 cursor-pointer">
+                      <SidebarLink link={link} />
+                    </div>
+                  );
+                } else {
+                  // Navigasi menggunakan Link react-router
+                  return (
+                    <Link key={idx} to={link.href} className="hover:bg-blue-50 px-1">
+                      <SidebarLink link={link} />
+                    </Link>
+                  );
+                }
+              })}
             </div>
           </div>
-          <SidebarLink
-            link={{
-              label: <p className="font-bold uppercase">{user?.user_metadata.role || "admin"}</p>,
-              href: "#",
-              icon: <IconUser className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200 bg-blue-50 rounded-full" />,
-            }}
-          />
+            <SidebarLink
+              link={{
+                label: <p className="cursor-pointer">Logout</p>,
+                icon: <IconLogout className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />,
+                onClick: handleLogout, // tambahkan event ini
+              }}
+            />
         </SidebarBody>
       </Sidebar>
 
       {/* Dashboard content area */}
       <div className="flex flex-1 flex-col p-10 bg-white dark:bg-neutral-900 border rounded">
-        <h1 className="text-2xl font-bold text-black dark:text-white mb-4">Selamat Datang, Admin</h1>
-        <p className="text-black dark:text-white">Ini adalah halaman dashboard admin kamu.</p>
+        <Outlet />
       </div>
     </div>
   );

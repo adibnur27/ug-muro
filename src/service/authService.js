@@ -34,7 +34,6 @@ export const checkIsAdmin = async() => {
     const session = await getCurrentSession();
 
     if(!session) throw new Error("Belum Login");
-    console.log(session);
     const role = session.user.app_metadata?.role;
     if (role !== "admin") throw new Error ("Kamu bukan admin");
 

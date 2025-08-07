@@ -9,9 +9,19 @@ import Research from "../pages/Research/Research";
 import Galery from "../pages/Galery/Galery";
 import Contact from "../pages/Contact/Contact";
 import NotFound from "../pages/NotFound/NotFound";
+
+
 import ScrollToTop from "../component/ScrollToTop/ScrollToTop";
+
+// pages Admin
 import AdminLogin from "../pages/AdminLogin/AdminLogin";
 import AdminDashboard from "../pages/AdminDashboard/AdminDashboard";
+import Dashboard from "../pages/AdminDashboard/component/Dashboard/Dashboard";
+import Participants from "../pages/AdminDashboard/component/Participants/Participants";
+import Workshop from "../pages/AdminDashboard/component/Workshop/Workshop";
+import Journal from "../pages/AdminDashboard/component/Journals/Journal";
+import Albums from "../pages/AdminDashboard/component/Albums/Albums";
+import AdminProfile from "../pages/AdminDashboard/component/AdminProfile/AdminProfile";
 const routes = () => {
   return (
     <>
@@ -26,7 +36,14 @@ const routes = () => {
 
         {/* Admin pages */}
         <Route path="/adminLogin" element={<AdminLogin/>}/>
-        <Route path="/adminDashboard" element={<AdminDashboard/>}/>
+        <Route path="/admin" element={<AdminDashboard />}>
+          <Route index element={<Dashboard/>} />
+          <Route path="participants" element={<Participants />} />
+          <Route path="workshop" element={<Workshop />} />
+          <Route path="journal" element={<Journal />} />
+          <Route path="albums" element={<Albums />} />
+          <Route path="adminProfile" element={<AdminProfile />} />
+        </Route>
 
         {/* NOT FOUND PAGES */}
         <Route path="*" element={<NotFound />} />
