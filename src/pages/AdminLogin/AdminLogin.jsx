@@ -60,6 +60,7 @@ const AdminLogin = () => {
       }
     }
   };
+  
 
   return (
     <div className="relative bg-gray-200 h-screen flex items-center justify-center rounded p-5">

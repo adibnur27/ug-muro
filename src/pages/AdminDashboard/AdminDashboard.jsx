@@ -6,6 +6,7 @@ import { IconArrowLeft, IconBrandTabler, IconHome, IconLayoutDashboard, IconLogo
 import { motion } from "framer-motion"; // atau dari motion/react kalau kamu pakai motion/react
 import { cn } from "@/lib/utils";
 import { LoaderOne } from "../../component/ui/loader";
+import Swal from "sweetalert2";
 
 const AdminDashboard = () => {
   const [user, setUser] = useState(null);
@@ -21,7 +22,11 @@ const AdminDashboard = () => {
         setUser(user);
         setAccessToken(accessToken);
       } catch (error) {
-        alert(error.message);
+        Swal.fire({
+          icon: "error",
+          title: "Anda belum login",
+          text: error.response?.data?.message || "Silahkan login terlebih dahulu.",
+        });
         navigate("/adminLogin");
       } finally {
         setLoading(false);
@@ -113,7 +118,7 @@ const AdminDashboard = () => {
       </Sidebar>
 
       {/* Dashboard content area */}
-      <div className="flex flex-1 flex-col p-10 bg-white dark:bg-neutral-900 border rounded">
+      <div className="flex flex-1 flex-col p-10 bg-white dark:bg-neutral-900 border rounded overflow-y-scroll">
         <Outlet />
       </div>
     </div>
