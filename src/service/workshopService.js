@@ -1,12 +1,31 @@
-import { CgArrangeFront } from "react-icons/cg";
+
 import { supabase } from "../lib/supabaseClient";
 
-// get workshop
-export const getWorkshop = async () => {
-  const { data, error } = await supabase.from("workshop").select("*").order("created_at", { ascending: false });
+/**
+ * Ambil data workshop dengan pagination & search dari Supabase
+ * @param {string} search - kata kunci pencarian
+ * @param {number} page - halaman aktif
+ * @param {number} limit - jumlah data per halaman
+ */
+export const getWorkshop = async (search = "", page = 1, limit = 5) => {
+  const from = (page - 1) * limit;
+  const to = from + limit - 1;
+
+  let query = supabase
+    .from("workshop")
+    .select("*", { count: "exact" })
+    .order("id", { ascending: true })
+    .range(from, to);
+
+  if (search) {
+    query = query.ilike("title", `%${search}%`);
+  }
+
+  const { data, count, error } = await query;
 
   if (error) throw error;
-  return data;
+
+  return { data, count };
 };
 
 // upload file to storage

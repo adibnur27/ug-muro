@@ -81,9 +81,9 @@ const AdminDashboard = () => {
     );
 
   return (
-    <div className={cn("flex w-full h-screen p-3 gap-3 bg-gradient-to-b from-blue-50 via-blue-50 to-blue-50 ")}>
+    <div className={cn("flex w-full h-screen p-3 gap-3 bg-gradient-to-b from-blue-50 via-blue-50 to-blue-50")}>
       <Sidebar open={open} setOpen={setOpen}>
-        <SidebarBody className="justify-between gap-10 bg-white rounded border">
+        <SidebarBody className="justify-between gap-10 bg-white rounded border font-roboto">
           <div className="flex flex-1 flex-col overflow-x-hidden overflow-y-auto ">
             {open ? <Logo /> : <LogoIcon />}
             <div className="mt-8 flex flex-col gap-2">
@@ -118,7 +118,7 @@ const AdminDashboard = () => {
       </Sidebar>
 
       {/* Dashboard content area */}
-      <div className="flex flex-1 flex-col p-10 bg-white dark:bg-neutral-900 border rounded overflow-y-scroll">
+      <div className="flex flex-1 flex-col p-10 bg-white dark:bg-neutral-900 border rounded overflow-y-scroll font-roboto">
         <Outlet />
       </div>
     </div>

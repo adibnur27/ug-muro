@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
+import { LoaderOne } from "../../../../../component/ui/loader"; // pastikan path sesuai
+import UploadImage from "../../../../../component/UploadImage/UploadImage";
+import UploadFile from "../../../../../component/UploadFile/UploadFile";
 
-const WorkshopForm = ({ initialData = {}, onSubmit, mode = "add" }) => {
+const WorkshopForm = ({ initialData = {}, onSubmit, mode = "add", isSubmitting }) => {
   const [form, setForm] = useState({
     title: "",
     description: "",
@@ -12,7 +15,6 @@ const WorkshopForm = ({ initialData = {}, onSubmit, mode = "add" }) => {
   });
 
   useEffect(() => {
-    // Jika ada data awal (edit), set default value
     if (initialData) {
       setForm((prev) => ({
         ...prev,
@@ -33,7 +35,7 @@ const WorkshopForm = ({ initialData = {}, onSubmit, mode = "add" }) => {
     e.preventDefault();
     try {
       await onSubmit(form);
-      alert(`Workshop berhasil di${mode === "add" ? "tambah" : "update"}`);
+
       if (mode === "add") {
         setForm({
           title: "",
@@ -51,60 +53,60 @@ const WorkshopForm = ({ initialData = {}, onSubmit, mode = "add" }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-md mx-auto space-y-4">
+    <form onSubmit={handleSubmit} className=" mx-auto space-y-4 relative">
+      {isSubmitting && (
+        <div className="absolute inset-0 bg-white bg-opacity-60 flex items-center justify-center z-10">
+          <LoaderOne />
+        </div>
+      )}
+
       <h2 className="text-xl font-bold">{mode === "add" ? "Tambah" : "Edit"} Workshop</h2>
+      <div className="flex gap-10">
+        <div className="w-3/5 flex flex-col justify-between">
+          <div>
+            <label htmlFor="title">Title</label>
+            <input type="text" name="title" value={form.title} placeholder="Add title" onChange={handleChange} className="w-full border border-gray-300 p-2 rounded" />
+          </div>
 
-      <div>
-        <label htmlFor="title">Title</label>
-        <input
-          type="text"
-          name="title"
-          value={form.title}
-          placeholder="Add title"
-          onChange={handleChange}
-          className="w-full border border-gray-300 p-2 rounded"
-          required
-        />
+          <div>
+            <label htmlFor="description">Description</label>
+            <textarea name="description" value={form.description} onChange={handleChange} className="w-full border border-gray-300 p-2 rounded" required />
+          </div>
+
+          <div>
+            <label>Registration Open: </label>
+            <input type="date" name="registration_open" value={form.registration_open} onChange={handleChange} className="input border-2 border-gray-300 px-1 rounded ms-3" required />
+          </div>
+
+          <div>
+            <label>Registration Close: </label>
+            <input type="date" name="registration_close" value={form.registration_close} onChange={handleChange} className="input border-2 border-gray-300 px-1 rounded ms-3" required />
+          </div>
+
+          <div>
+            <label>Start Date: </label>
+            <input type="date" name="start_date" value={form.start_date} onChange={handleChange} className="input border-2 border-gray-300 px-1 rounded ms-3" required />
+          </div>
+        </div>
+        <div>
+          <div>
+            <label>Image</label>
+            <UploadImage
+              name="image"
+              defaultPreview={form.image} // kalau edit, isi dengan URL
+              onChange={(file) => setForm((prev) => ({ ...prev, image: file }))}
+            />
+          </div>
+
+          <div>
+            <label>Module</label>
+            <UploadFile name="module" defaultName={typeof form.module === "string" ? form.module.split("/").pop() : ""} onChange={(file) => setForm((prev) => ({ ...prev, module: file }))} />
+          </div>
+        </div>
       </div>
 
-      <div>
-        <label htmlFor="description">Description</label>
-        <textarea
-          name="description"
-          value={form.description}
-          onChange={handleChange}
-          className="w-full border border-gray-300 p-2 rounded"
-          required
-        />
-      </div>
-
-      <div>
-        <label>Registration Open</label>
-        <input type="date" name="registration_open" value={form.registration_open} onChange={handleChange} className="input" required />
-      </div>
-
-      <div>
-        <label>Registration Close</label>
-        <input type="date" name="registration_close" value={form.registration_close} onChange={handleChange} className="input" required />
-      </div>
-
-      <div>
-        <label>Start Date</label>
-        <input type="date" name="start_date" value={form.start_date} onChange={handleChange} className="input" required />
-      </div>
-
-      <div>
-        <label>Image</label>
-        <input type="file" name="image" accept="image/*" onChange={handleChange} className="input" {...(mode === "add" ? { required: true } : {})} />
-      </div>
-
-      <div>
-        <label>Module</label>
-        <input type="file" name="module" accept=".pdf" onChange={handleChange} className="input" {...(mode === "add" ? { required: true } : {})} />
-      </div>
-
-      <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
-        {mode === "add" ? "Tambah" : "Update"} Workshop
+      <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 disabled:opacity-50" disabled={isSubmitting}>
+        {isSubmitting ? "Processing..." : mode === "add" ? "Tambah" : "Update"} Workshop
       </button>
     </form>
   );
