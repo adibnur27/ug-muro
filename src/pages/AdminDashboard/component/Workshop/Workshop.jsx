@@ -13,6 +13,7 @@ const Workshop = () => {
   const [loadingTable, setLoadingTable] = useState(true);
   const [loadingAction, setLoadingAction] = useState(false);
 
+  // modal
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [mode, setMode] = useState("add");
   const [editData, setEditData] = useState(null);
@@ -23,6 +24,8 @@ const Workshop = () => {
   const itemsPerPage = 4;
   const [totalItems, setTotalItems] = useState(0);
   const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+
 
   const getDataWorkshop = async () => {
     try {
@@ -129,10 +132,7 @@ const Workshop = () => {
 
       {/* Search */}
       <div className="mb-4">
-        <SearchBar
-          
-          onSearch={handleSearch}
-        />
+        <SearchBar onSearch={handleSearch} placeholder={"Search By Name"} />
       </div>
 
       <div className="overflow-x-auto">
@@ -183,7 +183,8 @@ const Workshop = () => {
 
       {/* Pagination */}
       {totalItems > 0 && (
-        <div className="mt-4 flex justify-center">
+        <div className="mt-4 flex justify-between  items-center px-2">
+          <div className="text-gray-400">{`page ${currentPage} of ${totalPages} pages`}</div>
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages} // ✅ ini yang benar

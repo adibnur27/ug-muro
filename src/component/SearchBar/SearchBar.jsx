@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const SearchBar = ({ onSearch }) => {
+const SearchBar = ({ onSearch, placeholder }) => {
   const [inputValue, setInputValue] = useState("");
 
   const handleSubmit = (e) => {
@@ -14,7 +14,7 @@ const SearchBar = ({ onSearch }) => {
         type="text"
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
-        placeholder="Search..."
+        placeholder={placeholder}
         className="border border-gray-300 px-3 py-2 rounded-md w-full md:w-64 focus:outline-none focus:ring focus:ring-blue-200"
       />
       <button

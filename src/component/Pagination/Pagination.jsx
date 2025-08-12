@@ -4,7 +4,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
   if (totalPages <= 1) return null;
 
   return (
-    <div className="flex justify-center space-x-1 mt-4">
+    <div className="flex justify-center space-x-1">
       <button
         className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
         disabled={currentPage === 1}

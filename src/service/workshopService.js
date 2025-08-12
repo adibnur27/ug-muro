@@ -70,7 +70,6 @@ export const addWorkshop = async (formData) => {
 export const updateWorkshop = async (id, formData) => {
   const { title, description, start_date, registration_open, registration_close, image, module } = formData;
 
-  console.log(formData);
   let imageUrl = null;
   let moduleFile = null;
   // Upload image hanya kalau ada file baru
@@ -83,8 +82,6 @@ export const updateWorkshop = async (id, formData) => {
     moduleFile = await uploadFile(module, "workshop-module", "modules");
   }
 
-  console.log(moduleFile);
-  console.log(imageUrl);
 
   const { data, error } = await supabase
     .from("workshop")
@@ -98,7 +95,7 @@ export const updateWorkshop = async (id, formData) => {
       ...(moduleFile && { module_file: moduleFile })
     })
     .eq("id", id);
-    console.log(data);
+    
   if (error) throw error;
   return data;
 };
