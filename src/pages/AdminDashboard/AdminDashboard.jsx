@@ -2,7 +2,7 @@
   import { Link, Outlet, useNavigate } from "react-router-dom";
   import { checkIsAdmin, logout } from "../../service/authService";
   import { Sidebar, SidebarBody, SidebarLink } from "../../component/ui/sidebar"; // sesuaikan pathnya jika beda
-  import { IconArrowLeft, IconBrandTabler, IconHome, IconLayoutDashboard, IconLogout, IconNotebook, IconPhoto, IconSettings, IconTools, IconUser, IconUserBolt, IconUsersGroup } from "@tabler/icons-react";
+  import { IconArrowLeft, IconBrandTabler, IconHome, IconLayoutDashboard, IconLogout, IconNotebook, IconPhoto, IconReportSearch, IconSettings, IconTools, IconUser, IconUserBolt, IconUsersGroup } from "@tabler/icons-react";
   import { motion } from "framer-motion"; // atau dari motion/react kalau kamu pakai motion/react
   import { cn } from "@/lib/utils";
   import { LoaderOne } from "../../component/ui/loader";
@@ -60,6 +60,11 @@
         label: "Workshop",
         href: "/admin/workshop",
         icon: <IconTools className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />,
+      },
+      {
+        label: "Workshop Result",
+        href: "/admin/workshopResult",
+        icon: <IconReportSearch className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />,
       },
       {
         label: "Journal",
