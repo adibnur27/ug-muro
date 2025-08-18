@@ -1,35 +1,71 @@
 import { supabase } from "../lib/supabaseClient";
 
-export async function getWorkshopResults() {
-  const { data, error } = await supabase.from("workshop_results").select(`
-      id,
-      status,
-      participant:participants!fk_workshop_results_participant (
+// Update function getWorkshopResults di workshopResultService.js
+export async function getWorkshopResults(page = 1, limit = 5) {
+  try {
+    const from = (page - 1) * limit;
+    const to = from + limit - 1;
+
+    const { data, error, count } = await supabase
+      .from("workshop_results")
+      .select(
+        `
         id,
-        name,
-        npm,
-        email,
-        workshop:workshop(title)
+        status,
+        created_at,
+        participants (
+          id,
+          name,
+          npm,
+          email,
+          workshop_id,
+          workshop (
+            id,
+            title,
+            description,
+            start_date,
+            registration_close,  
+            registration_open
+          )
+        )
+      `,
+        { count: "exact" }
       )
-    `);
+      .order("created_at", { ascending: false })
+      .range(from, to);
 
-  if (error) {
-    console.error("Error fetching workshop results:", error);
-    return [];
+    if (error) throw error;
+
+    const transformedData = data.map((result) => ({
+      id: result.id,
+      status: result.status,
+      created_at: result.created_at,
+      participant: result.participants
+        ? {
+            id: result.participants.id,
+            name: result.participants.name,
+            npm: result.participants.npm,
+            email: result.participants.email,
+            workshop_id: result.participants.workshop_id,
+            workshop: result.participants.workshop,
+          }
+        : null,
+    }));
+
+    return {
+      results: transformedData,
+      total: count,
+    };
+  } catch (err) {
+    console.error("Error fetching workshop results:", err.message);
+    throw err;
   }
-  return data;
-}
-
-export async function updateWorkshopResult(id, payload) {
-  const { error } = await supabase.from("workshop_results").update(payload).eq("id", id);
-
-  if (error) throw error;
 }
 
 // GUNAKAN INI untuk batch upload dari Excel
 export async function uploadWorkshopResultsFromExcel(rows) {
-  console.log("Batch uploading workshop results:", rows.length, "records");
-
+  console.log("Batch uploading workshop results:", rows);
+  
   // Format data sesuai skema database
   const formatted = rows.map((row) => ({
     participant_id: row.participant_id,
@@ -70,6 +106,30 @@ export async function createWorkshopResult(rowData) {
 
 export default createWorkshopResult;
 
+// ✅ TAMBAHAN: Function untuk update workshop result
+export async function updateWorkshopResult(id, rowData) {
+  console.log("Updating workshop result:", id, rowData);
+
+  try {
+    const dataToUpdate = {
+      participant_id: rowData.participant_id,
+      status: rowData.status,
+    };
+
+    const { data, error } = await supabase
+      .from("workshop_results")
+      .update(dataToUpdate)
+      .eq("id", id)
+      .select();
+
+    if (error) throw error;
+
+    return data;
+  } catch (err) {
+    console.error("Failed to update workshop result:", err.message);
+    throw err;
+  }
+}
 
 export const deleteWorkshopResult = async(id) => {
   const {data, error} = await supabase

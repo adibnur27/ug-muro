@@ -3,7 +3,7 @@ import { supabase } from "../../../../../lib/supabaseClient";
 import { downloadWorkshopTemplate, parseWorkshopResultFile } from "../../../../../utils/excelUtils";
 import { uploadWorkshopResultsFromExcel } from "../../../../../service/workshopResultService";
 
-export default function WorkshopListUpload({ onUploadComplete }) {
+export default function WorkshopListUpload({ onUploadSuccess }) {
   const [loading, setLoading] = useState(false);
   const [workshops, setWorkshops] = useState([]);
   const [selectedWorkshop, setSelectedWorkshop] = useState("");
@@ -77,7 +77,7 @@ export default function WorkshopListUpload({ onUploadComplete }) {
       // Gunakan batch upload instead of loop
       await uploadWorkshopResultsFromExcel(validRows);
 
-      if (onUploadComplete) onUploadComplete();
+      if (onUploadSuccess) onUploadSuccess();
       alert(`Data berhasil diunggah: ${validRows.length} record`);
     } catch (err) {
       console.error("Error parsing Excel file:", err);

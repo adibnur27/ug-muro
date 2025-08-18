@@ -25,8 +25,6 @@ const Workshop = () => {
   const [totalItems, setTotalItems] = useState(0);
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
-
-
   const getDataWorkshop = async () => {
     try {
       setLoadingTable(true);
@@ -184,7 +182,9 @@ const Workshop = () => {
       {/* Pagination */}
       {totalItems > 0 && (
         <div className="mt-4 flex justify-between  items-center px-2">
-          <div className="text-gray-400">{`page ${currentPage} of ${totalPages} pages`}</div>
+          <div className="text-gray-400 text-sm">
+            Page {currentPage} of {totalPages} pages 
+          </div>
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages} // ✅ ini yang benar
