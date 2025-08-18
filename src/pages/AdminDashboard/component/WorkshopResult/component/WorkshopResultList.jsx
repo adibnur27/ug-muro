@@ -1,4 +1,4 @@
-export default function WorkshopResultList({ results, onEdit, onDelete }) {
+export default function WorkshopResultList({ results, onEdit, onDelete,currentPage, itemsPerPage }) {
   return (
     <table className="w-full border mt-4">
       <thead>
@@ -13,9 +13,9 @@ export default function WorkshopResultList({ results, onEdit, onDelete }) {
         </tr>
       </thead>
       <tbody>
-        {results.map((r,i) => (
+        {results.map((r,index) => (
           <tr key={r.id}>
-            <td className="border p-2">{i+1}</td>
+            <td className="border p-2">{index + 1 + (currentPage - 1) * itemsPerPage}</td>
             <td className="border p-2">{r.participant?.name}</td>
             <td className="border p-2">{r.participant?.npm}</td>
             <td className="border p-2">{r.participant?.email}</td>

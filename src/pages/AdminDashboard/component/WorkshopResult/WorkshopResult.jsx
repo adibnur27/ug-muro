@@ -19,7 +19,7 @@ export default function WorkshopResult() {
   // Pagination States
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
-  const limit = 5;
+  const limit = 10;
 
   // Filter states
   const [categories, setCategories] = useState([]);
@@ -88,6 +88,7 @@ export default function WorkshopResult() {
 
   const totalPages = Math.ceil(total / limit);
 
+  
   // Event handlers
   const handleWorkshopChange = (e) => setSelectedWorkshop(e.target.value);
   const handleStatusChange = (e) => setSelectedStatus(e.target.value);
@@ -137,6 +138,9 @@ export default function WorkshopResult() {
     setShowForm(true);
   };
 
+
+
+
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-4">
@@ -177,10 +181,12 @@ export default function WorkshopResult() {
         results={filteredResults}
         onEdit={handleEdit}
         onDelete={handleDelete}
+        currentPage={page}
+        itemsPerPage={limit}
       />
 
       {/* Pagination */}
-      {results.length > 0 && (
+      {total > limit && (
         <div className="mt-4 flex justify-between items-center px-2">
           <div className="text-gray-400 text-sm">
             Page {page} of {totalPages} pages

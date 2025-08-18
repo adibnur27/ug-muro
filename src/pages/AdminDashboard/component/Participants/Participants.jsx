@@ -20,7 +20,7 @@ const Participants = () => {
 
   // pagination state
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = 10;
 
   // filter workshop
   const [selectedWorkshop, setSelectedWorkshop] = useState("");

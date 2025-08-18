@@ -1,7 +1,7 @@
 import { supabase } from "../lib/supabaseClient";
 
 // Update function getWorkshopResults di workshopResultService.js
-export async function getWorkshopResults(page = 1, limit = 5) {
+export async function getWorkshopResults(page, limit) {
   try {
     const from = (page - 1) * limit;
     const to = from + limit - 1;
