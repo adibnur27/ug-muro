@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { getWorkshop } from "../../service/workshopService";
 import Swal from "sweetalert2";
+import { supabase } from "../../lib/supabaseClient";
 
 
 
@@ -14,7 +15,8 @@ export const WorkshopProvider = ({children}) => {
     const fetchWorkshop = async() => {
         try {
             setLoading(true)
-            const data = await getWorkshop();
+            const data = await supabase
+            .from("workshop").select("*");
             setWorkshop(data.data);
         } catch (error) {
             Swal.fire("Error",`Data Workshop gagal Diambil ${error}`, "error");
@@ -26,6 +28,8 @@ export const WorkshopProvider = ({children}) => {
     useEffect(() => {
        fetchWorkshop(); 
     },[])
+
+    console.log(workshop);
 
 
     return (

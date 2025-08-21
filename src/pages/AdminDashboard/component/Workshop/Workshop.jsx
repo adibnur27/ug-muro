@@ -21,7 +21,7 @@ const Workshop = () => {
   // Search & Pagination
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = 10;
   const [totalItems, setTotalItems] = useState(0);
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 

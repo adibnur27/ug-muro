@@ -7,7 +7,7 @@ import { supabase } from "../lib/supabaseClient";
  * @param {number} page - halaman aktif
  * @param {number} limit - jumlah data per halaman
  */
-export const getWorkshop = async (search = "", page = 1, limit = 5) => {
+export const getWorkshop = async (search = "", page = 1, limit) => {
   const from = (page - 1) * limit;
   const to = from + limit - 1;
 

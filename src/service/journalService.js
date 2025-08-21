@@ -3,7 +3,7 @@ import { supabase } from "../lib/supabaseClient";
 export const uploadJournal = async(file) => {
     const fileName = `${Date.now()}-${file.name}`;
 
-    const {data,error} = await supabase.storage
+    const {data ,error} = await supabase.storage
     .from("journal-files")
     .upload(fileName,file);
 
@@ -41,14 +41,26 @@ export const addJournal = async(title,authors,fileUrl) => {
 }
 
 
-export const getJournal = async() => {
-    const {data, error} = await supabase
-    .from("journals")
-    .select("*");
+export const getJournal = async(search = "",page = 1, limit) => {
 
+    const from = (page - 1) * limit;
+    const to = from + limit - 1;
+
+    let query = supabase
+    .from("journals")
+    .select("*", {count : "exact"})
+    .order("id", {ascending: true})
+    .range(from,to);
+    
+    if(search){
+        query = query.or(`title.ilike.%${search}%, authors.ilike.%${search}%`);
+    };
+    
+    const {data,count, error} = await query;
+    console.log("from:", from, "to:", to, "limit:", limit, "result:", data);
     if(error) throw error;
 
-    return data;
+    return {data , count};
 }
 
 

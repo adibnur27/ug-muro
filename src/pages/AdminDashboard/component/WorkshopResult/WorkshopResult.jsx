@@ -106,8 +106,8 @@ export default function WorkshopResult() {
   const handleDelete = async (data) => {
     const confirmDelete = await Swal.fire({
       title: "Yakin hapus?",
-      html: `<p>nama: ${data.participant?.name || "N/A"}</p>
-             <p>workshop: ${data.participant?.workshop?.title || "N/A"}</p>
+      html: `<p>nama: <strong>${data?.name || "N/A"}</strong></p>
+             <p>workshop: <strong>${data?.workshop || "N/A"}</strong></p>
              Data akan dihapus permanen.`,
       icon: "warning",
       showCancelButton: true,

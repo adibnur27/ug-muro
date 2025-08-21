@@ -32,6 +32,7 @@ const Participants = () => {
 
   // workshop from context
   const { workshop } = useWorkshop();
+  console.log(workshop);
 
   const getWorkshopTitle = (id) => {
     const workshopTitle = workshop.find((w) => w.id === id);

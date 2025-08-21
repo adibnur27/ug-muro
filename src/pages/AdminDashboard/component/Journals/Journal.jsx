@@ -3,31 +3,40 @@ import { addJournal, deleteJournal, getJournal, updateJournal, uploadJournal } f
 import Modal from "../../../../component/Modal/Modal";
 import Swal from "sweetalert2";
 import JournalForm from "./component/JournalForm";
+import Pagination from "../../../../component/Pagination/Pagination";
+import SearchBar from "../../../../component/SearchBar/SearchBar";
 
 const Journal = () => {
-  const[journals, setJournals] = useState([]);
+  const [journals, setJournals] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingJournal, setEditingJournal] = useState(null)
+  const [editingJournal, setEditingJournal] = useState(null);
+
+  // state pagination search
+  const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+  const [totalItems, setTotalItems] = useState(0);
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
 
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => {
-  setIsModalOpen(false);
-  setEditingJournal(null);
-};
+    setIsModalOpen(false);
+    setEditingJournal(null);
+  };
 
-  const getDataJournal = async() => {
+  const getDataJournal = async () => {
     try {
-      const data = await getJournal();
-      setJournals(data);
+      const { data, count } = await getJournal(searchTerm, currentPage, itemsPerPage);
+      setJournals(data || []);
+      setTotalItems(count || 0);
     } catch (error) {
-      Swal.fire("error",`Journal Gagal diload${error}`,"error");
+      Swal.fire("error", `Journal Gagal diload${error}`, "error");
     }
-  }
+  };
 
   useEffect(() => {
     getDataJournal();
-  },[]);
-
+  }, [searchTerm, currentPage]);
 
   const createJournal = async ({ title, authors, file }) => {
     try {
@@ -41,56 +50,61 @@ const Journal = () => {
     }
   };
 
-
-  const editJournal = async ({title, authors, file}) => {
+  const editJournal = async ({ title, authors, file }) => {
     try {
       console.log(editingJournal);
       let fileUrl = editingJournal.file_url;
-      if(file){
+      if (file) {
         fileUrl = await uploadJournal(file);
       }
       await updateJournal(editingJournal.id, title, authors, fileUrl);
       await getDataJournal();
       handleCloseModal();
-      Swal.fire("success","Update Data Berhasil", "success");
+      Swal.fire("success", "Update Data Berhasil", "success");
     } catch (error) {
-      Swal.fire("error",`Gagal Update data ${error.message}`, "error");
+      Swal.fire("error", `Gagal Update data ${error.message}`, "error");
     }
-  }
+  };
 
   const handleDelete = async (id, title) => {
-      const confirmDelete = await Swal.fire({
-        title: "Yakin Menghapus Participant?",
-        html: `Journal <strong>${title}</strong> akan <strong>dihapus Permanen</strong>`,
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonText: "Ya, hapus",
-        cancelButtonText: "Batal",
-      });
-  
-      if (confirmDelete.isConfirmed) {
-        try {
-          await deleteJournal(id);
-          await Swal.fire("Berhasil!", "Participants berhasil dihapus", "success");
-          await getDataJournal();
-        } catch (err) {
-          Swal.fire("Gagal", err.message, "error");
-        }
-      }
-    };
+    const confirmDelete = await Swal.fire({
+      title: "Yakin Menghapus Participant?",
+      html: `Journal <strong>${title}</strong> akan <strong>dihapus Permanen</strong>`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Ya, hapus",
+      cancelButtonText: "Batal",
+    });
 
+    if (confirmDelete.isConfirmed) {
+      try {
+        await deleteJournal(id);
+        await Swal.fire("Berhasil!", "Participants berhasil dihapus", "success");
+        await getDataJournal();
+      } catch (err) {
+        Swal.fire("Gagal", err.message, "error");
+      }
+    }
+  };
+
+  const handleSearch = (keywords) => {
+    setSearchTerm(keywords);
+    setCurrentPage(1);
+  };
 
   return (
     <div className="p-6">
       <h1 className="text-xl font-bold mb-4">Journal Page</h1>
-
-      {/* Tombol buka modal */}
-      <button
-        onClick={handleOpenModal}
-        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-      >
-        Upload Journal
-      </button>
+      <div className="flex justify-between">
+        {/* searcBar */}
+        <div className="">
+          <SearchBar onSearch={handleSearch} placeholder={"search By Title & Author"} />
+        </div>
+        {/* Tombol buka modal */}
+        <button onClick={handleOpenModal} className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+          Upload Journal
+        </button>
+      </div>
 
       {/* Tabel daftar journal */}
       <table className="w-full mt-6 border border-gray-300 rounded">
@@ -108,26 +122,19 @@ const Journal = () => {
           {journals.length > 0 ? (
             journals.map((journal, index) => (
               <tr key={journal.id} className="text-center">
-                <td className="p-2 border">{index + 1}</td>
+                <td className="p-2 border">{index + 1 + (currentPage - 1) * itemsPerPage}</td>
                 <td className="p-2 border">{journal.title}</td>
                 <td className="p-2 border">{journal.authors}</td>
                 <td className="p-2 border">
                   {journal.file_url ? (
-                    <a
-                      href={journal.file_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-500 underline"
-                    >
+                    <a href={journal.file_url} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">
                       Lihat File
                     </a>
                   ) : (
                     "-"
                   )}
                 </td>
-                <td className="p-2 border">
-                  {new Date(journal.created_at).toLocaleDateString()}
-                </td>
+                <td className="p-2 border">{new Date(journal.created_at).toLocaleDateString()}</td>
                 <td className="p-2 border space-x-2">
                   <button
                     onClick={() => {
@@ -138,10 +145,7 @@ const Journal = () => {
                   >
                     Edit
                   </button>
-                  <button
-                    onClick={() => handleDelete(journal.id, journal.title)}
-                    className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
-                  >
+                  <button onClick={() => handleDelete(journal.id, journal.title)} className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600">
                     Delete
                   </button>
                 </td>
@@ -157,15 +161,20 @@ const Journal = () => {
         </tbody>
       </table>
 
+      {/* Pagination */}
+      {totalItems > 0 && (
+        <div className="mt-4 flex justify-between items-center px-2">
+          <div className="text-gray-400 text-sm">
+            page {currentPage} of {totalPages} pages
+          </div>
+          <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
+        </div>
+      )}
+
       {/* Modal */}
       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
-        <h2 className="text-lg font-semibold mb-4">
-          {editingJournal ? "Edit Journal" : "Upload Journal"}
-        </h2>
-        <JournalForm
-          onSubmit={editingJournal ? editJournal : createJournal}
-          initialData={editingJournal}
-        />
+        <h2 className="text-lg font-semibold mb-4">{editingJournal ? "Edit Journal" : "Upload Journal"}</h2>
+        <JournalForm onSubmit={editingJournal ? editJournal : createJournal} initialData={editingJournal} />
       </Modal>
     </div>
   );
