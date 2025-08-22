@@ -11,15 +11,15 @@ export default function WorkshopResultFilter({
   filteredLength,
 }) {
   return (
-    <div className="bg-white p-4 rounded-lg shadow-sm border mb-6">
-      <h3 className="text-lg font-semibold mb-3 text-gray-800">Filter Data</h3>
+    <div className="bg-white px-4 rounded-lg">
+      {/* <h3 className="text-lg font-semibold mb-3 text-gray-800">Filter Data</h3> */}
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Workshop Filter */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          {/* <label className="block text-sm font-medium text-gray-700">
             Workshop
-          </label>
+          </label> */}
           <select
             value={selectedWorkshop}
             onChange={onWorkshopChange}
@@ -36,9 +36,9 @@ export default function WorkshopResultFilter({
 
         {/* Status Filter */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          {/* <label className="block text-sm font-medium text-gray-700">
             Status
-          </label>
+          </label> */}
           <select
             value={selectedStatus}
             onChange={onStatusChange}
@@ -65,7 +65,7 @@ export default function WorkshopResultFilter({
       {/* Filter Summary */}
       <div className="mt-3 text-sm text-gray-600">
         <span className="font-medium">
-          Menampilkan {filteredLength} dari {resultsLength} data
+          Showing {filteredLength} of {resultsLength} entries
         </span>
         {(selectedWorkshop || selectedStatus) && (
           <span className="ml-2">

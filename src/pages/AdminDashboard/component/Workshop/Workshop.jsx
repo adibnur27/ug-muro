@@ -6,6 +6,8 @@ import WorkshopForm from "./component/WorkshopForm";
 import Modal from "../../../../component/Modal/Modal";
 import SearchBar from "../../../../component/SearchBar/SearchBar";
 import Pagination from "../../../../component/Pagination/Pagination";
+import ActionButton from "../../../../component/Button/ActionButton";
+import { IconEdit, IconTrash } from "@tabler/icons-react";
 
 const Workshop = () => {
   const [workshops, setWorkshops] = useState([]);
@@ -114,65 +116,75 @@ const Workshop = () => {
   }
 
   return (
-    <div className="p-4">
+    <div className="">
       {loadingAction && (
         <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
           <LoaderOne />
         </div>
       )}
 
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-semibold">Workshop List</h2>
-        <button onClick={handleAddClick} className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-          + Add Workshop
-        </button>
+      <div className="my-2 mb-10">
+        <h2 className="text-2xl font-bold text-gray-400">Workshop List</h2>
       </div>
 
       {/* Search */}
-      <div className="mb-4">
+      <div className="flex justify-between items-center mb-4">
         <SearchBar onSearch={handleSearch} placeholder={"Search By Name"} />
+        <button onClick={handleAddClick} className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+          Add Workshop
+        </button>
       </div>
 
       <div className="overflow-x-auto">
-        <table className="min-w-full border border-gray-300 text-sm text-left">
+        <table className="min-w-full border-separate border-spacing-y-3  text-sm">
           <thead className="bg-gray-100">
             <tr>
-              <th className="border px-4 py-2 text-center">No</th>
-              <th className="border px-4 py-2 text-center">Title</th>
-              <th className="border px-4 py-2 text-center">Description</th>
-              <th className="border px-4 py-2 text-center">Image</th>
-              <th className="border px-4 py-2 text-center">Module File</th>
-              <th className="border px-4 py-2 text-center">Reg. Open</th>
-              <th className="border px-4 py-2 text-center">Reg. Close</th>
-              <th className="border px-4 py-2 text-center">Start Date</th>
-              <th className="border px-4 py-2 text-center">Action</th>
+              <th className="border-s border-y bg-blue-100 rounded-s p-2 text-center">No</th>
+              <th className="border-y bg-blue-100  p-2 text-center">Title</th>
+              <th className="border-y bg-blue-100  p-2 text-center">Description</th>
+              <th className="border-y bg-blue-100  p-2 text-center">Image</th>
+              <th className="border-y bg-blue-100  p-2 text-center">Module File</th>
+              <th className="border-y bg-blue-100  p-2 text-center">Reg. Open</th>
+              <th className="border-y bg-blue-100  p-2 text-center">Reg. Close</th>
+              <th className="border-y bg-blue-100  p-2 text-center">Start Date</th>
+              <th className="border border-y bg-blue-100 rounded-e  p-2 text-center">Action</th>
             </tr>
           </thead>
           <tbody>
             {workshops.map((workshop, index) => (
               <tr key={workshop.id} className="hover:bg-gray-50">
-                <td className="border px-2 py-2 text-center">{index + 1 + (currentPage - 1) * itemsPerPage}</td>
-                <td className="border px-2 py-2 text-center">{workshop.title}</td>
-                <td className="border px-2 py-2 w-[30%]">{workshop.description}</td>
-                <td className="border px-2 py-2">
+                <td className="border-s border-y rounded-s p-2 shadow-md shadow-blue-50 text-center">{index + 1 + (currentPage - 1) * itemsPerPage}</td>
+                <td className="border-y p-2 shadow-md shadow-blue-50 text-center">{workshop.title}</td>
+                <td className="border-y p-2 shadow-md shadow-blue-50 w-[30%]">{workshop.description}</td>
+                <td className="border-y p-2 shadow-md shadow-blue-50">
                   <img src={workshop.image_url} alt={workshop.title} className="w-24 h-16 object-cover rounded" />
                 </td>
-                <td className="border px-2 py-2 text-center">
+                <td className="border-y p-2 shadow-md shadow-blue-50 text-center">
                   <a href={workshop.module_file} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">
                     Module
                   </a>
                 </td>
-                <td className="border px-2 py-2 text-center">{workshop.registration_open}</td>
-                <td className="border px-2 py-2 text-center">{workshop.registration_close}</td>
-                <td className="border px-2 py-2 text-center">{workshop.start_date}</td>
-                <td className="border px-2 py-2 text-center space-x-1 space-y-1">
-                  <button onClick={() => handleEditClick(workshop)} className="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600">
-                    Edit
-                  </button>
-                  <button onClick={() => handleDeleteClick(workshop)} className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600">
-                    Delete
-                  </button>
+                <td className="border-y p-2 shadow-md shadow-blue-50 text-center">{workshop.registration_open}</td>
+                <td className="border-y p-2 shadow-md shadow-blue-50 text-center">{workshop.registration_close}</td>
+                <td className="border-y p-2 shadow-md shadow-blue-50 text-center">{workshop.start_date}</td>
+                <td className="border-e border-y rounded-e p-2 shadow-md shadow-blue-50 space-x-1 space-y-1 text-center">
+                  <ActionButton
+                    hoverShadowColor={"yellow"}
+                    children={
+                      <IconEdit className="text-yellow-600"/>
+                    }
+                    onClick={() => handleEditClick(workshop)}
+                  />
+                  <ActionButton
+                    hoverShadowColor={"red"}
+                    children={
+                     <IconTrash className="text-red-600"/>
+                    }
+                    onClick={() => handleDeleteClick(workshop)}
+                  />
+                  
                 </td>
+                
               </tr>
             ))}
           </tbody>
@@ -184,6 +196,9 @@ const Workshop = () => {
         <div className="mt-4 flex justify-between  items-center px-2">
           <div className="text-gray-400 text-sm">
             Page {currentPage} of {totalPages} pages 
+          </div>
+          <div className="text-gray-400 text-sm">
+            Total Number of Workshops {workshops.length} 
           </div>
           <Pagination
             currentPage={currentPage}

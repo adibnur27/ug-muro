@@ -5,6 +5,8 @@ import Swal from "sweetalert2";
 import JournalForm from "./component/JournalForm";
 import Pagination from "../../../../component/Pagination/Pagination";
 import SearchBar from "../../../../component/SearchBar/SearchBar";
+import { IconEdit, IconTrash } from "@tabler/icons-react";
+import ActionButton from "../../../../component/Button/ActionButton";
 
 const Journal = () => {
   const [journals, setJournals] = useState([]);
@@ -94,38 +96,38 @@ const Journal = () => {
 
   return (
     <div className="p-6">
-      <h1 className="text-xl font-bold mb-4">Journal Page</h1>
-      <div className="flex justify-between">
+      <h1 className="text-2xl font-bold text-gray-400 mb-8">Journal Page</h1>
+      <div className="flex gap-2 h-9 items-end justify-between">
         {/* searcBar */}
-        <div className="">
+        <div className="flex gap-2">
           <SearchBar onSearch={handleSearch} placeholder={"search By Title & Author"} />
+          {/* Tombol buka modal */}
+          <button onClick={handleOpenModal} className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+            Upload Journal
+          </button>
         </div>
-        {/* Tombol buka modal */}
-        <button onClick={handleOpenModal} className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-          Upload Journal
-        </button>
       </div>
 
       {/* Tabel daftar journal */}
-      <table className="w-full mt-6 border border-gray-300 rounded">
-        <thead className="bg-gray-100">
+      <table className="w-full mt-4 border-separate border-spacing-y-3">
+        <thead className="">
           <tr>
-            <th className="p-2 border">No</th>
-            <th className="p-2 border">Title</th>
-            <th className="p-2 border">Authors</th>
-            <th className="p-2 border">File</th>
-            <th className="p-2 border">Created At</th>
-            <th className="p-2 border">Actions</th>
+            <th className="p-2 border-s border-y bg-blue-100 rounded-s">No</th>
+            <th className="p-2 border-y bg-blue-100 ">Title</th>
+            <th className="p-2 border-y bg-blue-100 ">Authors</th>
+            <th className="p-2 border-y bg-blue-100 ">File</th>
+            <th className="p-2 border-y bg-blue-100 ">Created At</th>
+            <th className="p-2 border-e border-y bg-blue-100 rounded-e">Actions</th>
           </tr>
         </thead>
         <tbody>
           {journals.length > 0 ? (
             journals.map((journal, index) => (
               <tr key={journal.id} className="text-center">
-                <td className="p-2 border">{index + 1 + (currentPage - 1) * itemsPerPage}</td>
-                <td className="p-2 border">{journal.title}</td>
-                <td className="p-2 border">{journal.authors}</td>
-                <td className="p-2 border">
+                <td className="p-2 border-s border-y shadow-md shadow-blue-100 rounded-s">{index + 1 + (currentPage - 1) * itemsPerPage}</td>
+                <td className="p-2 border-y shadow-md shadow-blue-100">{journal.title}</td>
+                <td className="p-2 border-y shadow-md shadow-blue-100">{journal.authors}</td>
+                <td className="p-2 border-y shadow-md shadow-blue-100">
                   {journal.file_url ? (
                     <a href={journal.file_url} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">
                       Lihat File
@@ -134,20 +136,17 @@ const Journal = () => {
                     "-"
                   )}
                 </td>
-                <td className="p-2 border">{new Date(journal.created_at).toLocaleDateString()}</td>
-                <td className="p-2 border space-x-2">
-                  <button
+                <td className="p-2 border-y shadow-md shadow-blue-100">{new Date(journal.created_at).toLocaleDateString()}</td>
+                <td className="p-2 border-e border-y shadow-md shadow-blue-100 rounded-e space-x-1 space-y-1 text-center">
+                  <ActionButton
+                    hoverShadowColor={"yellow"}
+                    children={<IconEdit className="text-yellow-600" />}
                     onClick={() => {
                       setEditingJournal(journal);
                       setIsModalOpen(true);
                     }}
-                    className="px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600"
-                  >
-                    Edit
-                  </button>
-                  <button onClick={() => handleDelete(journal.id, journal.title)} className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600">
-                    Delete
-                  </button>
+                  />
+                  <ActionButton hoverShadowColor={"red"} children={<IconTrash className="text-red-600" />} onClick={() => handleDelete(journal.id, journal.title)} />
                 </td>
               </tr>
             ))
@@ -160,22 +159,25 @@ const Journal = () => {
           )}
         </tbody>
       </table>
-
-      {/* Pagination */}
-      {totalItems > 0 && (
-        <div className="mt-4 flex justify-between items-center px-2">
-          <div className="text-gray-400 text-sm">
-            page {currentPage} of {totalPages} pages
+      <div className="flex mt-4 justify-between">
+        {/* Pagination */}
+        {totalItems > 0 && (
+          <div className=" flex justify-between items-center w-full px-2">
+            <div className="text-gray-400 text-sm">
+              page {currentPage} of {totalPages} pages
+            </div>
+            <div className="text-gray-400 text-sm">
+             Total Number of Journals {journals.length}
+            </div>
+            <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
           </div>
-          <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
-        </div>
-      )}
-
-      {/* Modal */}
-      <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
-        <h2 className="text-lg font-semibold mb-4">{editingJournal ? "Edit Journal" : "Upload Journal"}</h2>
-        <JournalForm onSubmit={editingJournal ? editJournal : createJournal} initialData={editingJournal} />
-      </Modal>
+        )}
+        {/* Modal */}
+        <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
+          <h2 className="text-lg font-semibold mb-4">{editingJournal ? "Edit Journal" : "Upload Journal"}</h2>
+          <JournalForm onSubmit={editingJournal ? editJournal : createJournal} initialData={editingJournal} />
+        </Modal>
+      </div>
     </div>
   );
 };

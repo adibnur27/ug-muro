@@ -95,33 +95,39 @@ export default function WorkshopListUpload({ onUploadSuccess }) {
   };
 
   return (
-    <div className="p-4 border rounded shadow-sm bg-white">
-      <h2 className="text-lg font-semibold mb-2">Download & Upload Hasil Workshop</h2>
-
-      {/* Pilih Workshop */}
-      <select value={selectedWorkshop} onChange={(e) => setSelectedWorkshop(e.target.value)} className="border p-2 rounded mb-2 w-full">
-        <option value="">-- Pilih Workshop --</option>
-        {workshops.map((ws) => (
-          <option key={ws.id} value={ws.id}>
-            {ws.title}
-          </option>
-        ))}
-      </select>
-
-      {/* Tombol Download */}
-      <button onClick={handleDownload} className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 w-full">
-        Download Template
-      </button>
+    <div className="flex justify-end rounded bg-white w-[1/2] space-x-2 box-border">
+      
 
       {/* Upload File */}
-      <div className="mt-3">
-        <input type="file" accept=".xlsx, .xls" onChange={handleFileChange} className="border p-2 rounded w-full" />
-      </div>
+      <div className="bg-blue-200 p-2 box-border w-[45%] rounded">
+        <h2 className="text-sm font-semibold mb-2 text-center">Upload Data Workshop</h2>
+        <div className="mb-2">
+          <input type="file" accept=".xlsx, .xls" onChange={handleFileChange} className="border p-1 rounded w-full" />
+        </div>
 
-      {/* Tombol Submit */}
-      <button onClick={handleSubmit} className="mt-3 px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 w-full" disabled={loading}>
-        {loading ? "Memproses..." : "Submit"}
-      </button>
+        {/* Tombol Submit */}
+        <button onClick={handleSubmit} className=" px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 w-full" disabled={loading}>
+          {loading ? "Memproses..." : "Submit"}
+        </button>
+      </div>
+      <div className="bg-green-200 p-2 box-border w-[45%] rounded">
+        <h2 className="text-sm font-semibold mb-2 text-center ">Download Data Workshop</h2>
+
+        {/* Pilih Workshop */}
+        <select value={selectedWorkshop} onChange={(e) => setSelectedWorkshop(e.target.value)} className="border p-2 rounded mb-2 w-full">
+          <option value="">-- Pilih Workshop --</option>
+          {workshops.map((ws) => (
+            <option key={ws.id} value={ws.id}>
+              {ws.title}
+            </option>
+          ))}
+        </select>
+
+        {/* Tombol Download */}
+        <button onClick={handleDownload} className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 w-full">
+          Download Template
+        </button>
+      </div>
     </div>
   );
 }

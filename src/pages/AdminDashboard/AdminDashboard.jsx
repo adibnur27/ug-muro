@@ -2,11 +2,12 @@
   import { Link, Outlet, useNavigate } from "react-router-dom";
   import { checkIsAdmin, logout } from "../../service/authService";
   import { Sidebar, SidebarBody, SidebarLink } from "../../component/ui/sidebar"; // sesuaikan pathnya jika beda
-  import { IconArrowLeft, IconBrandTabler, IconHome, IconLayoutDashboard, IconLogout, IconNotebook, IconPhoto, IconReportSearch, IconSettings, IconTools, IconUser, IconUserBolt, IconUsersGroup } from "@tabler/icons-react";
+  import { IconLayoutDashboard, IconLogout, IconNotebook, IconPhoto, IconReportSearch, IconTools, IconUser, IconUsersGroup } from "@tabler/icons-react";
   import { motion } from "framer-motion"; // atau dari motion/react kalau kamu pakai motion/react
   import { cn } from "@/lib/utils";
   import { LoaderOne } from "../../component/ui/loader";
   import Swal from "sweetalert2";
+import ButtonLogout from "../../component/Button/ButtonLogout";
 
   const AdminDashboard = () => {
     const [user, setUser] = useState(null);
@@ -86,9 +87,9 @@
       );
 
     return (
-      <div className={cn("flex w-full h-screen p-3 gap-3 bg-gradient-to-b from-blue-50 via-blue-50 to-blue-50")}>
+      <div className={cn("flex w-full h-screen gap-3 p-2 bg-gradient-to-b from-blue-50 via-blue-50 to-blue-50")}>
         <Sidebar open={open} setOpen={setOpen}>
-          <SidebarBody className="justify-between gap-10 bg-white rounded border font-roboto">
+          <SidebarBody className="justify-between gap-10 bg-gray-50 rounded border font-roboto">
             <div className="flex flex-1 flex-col overflow-x-hidden overflow-y-auto ">
               {open ? <Logo /> : <LogoIcon />}
               <div className="mt-8 flex flex-col gap-2">
@@ -111,19 +112,12 @@
                 })}
               </div>
             </div>
-            <div onClick={handleLogout} className="hover:bg-blue-50 px-1 cursor-pointer">
-              <SidebarLink
-                link={{
-                  label: <p className="cursor-pointer">Logout</p>,
-                  icon: <IconLogout className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />,
-                }}
-              />
-            </div>
+            <ButtonLogout onClick={handleLogout}/>
           </SidebarBody>
         </Sidebar>
 
         {/* Dashboard content area */}
-        <div className="flex flex-1 flex-col p-10 bg-white dark:bg-neutral-900 border rounded overflow-y-scroll font-roboto">
+        <div className="flex flex-1 flex-col px-5 py-2 bg-gray-50 dark:bg-neutral-900 border rounded overflow-x-hidden overflow-y-scroll font-roboto">
           <Outlet />
         </div>
       </div>

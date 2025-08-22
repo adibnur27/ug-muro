@@ -45,10 +45,7 @@ export default function WorkshopResult() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const { data: workshops, error: workshopError } = await supabase
-          .from("workshop")
-          .select("id, title")
-          .order("title");
+        const { data: workshops, error: workshopError } = await supabase.from("workshop").select("id, title").order("title");
 
         if (workshopError) throw workshopError;
         setCategories(workshops || []);
@@ -64,9 +61,7 @@ export default function WorkshopResult() {
     let filtered = [...results];
 
     if (selectedWorkshop) {
-      filtered = filtered.filter(
-        (result) => result.participant?.workshop_id === selectedWorkshop
-      );
+      filtered = filtered.filter((result) => result.participant?.workshop_id === selectedWorkshop);
     }
 
     if (selectedStatus) {
@@ -75,11 +70,12 @@ export default function WorkshopResult() {
 
     if (searchQuery) {
       const lowerSearch = searchQuery.toLowerCase();
-      filtered = filtered.filter((result) =>
-        result.participant?.name?.toLowerCase().includes(lowerSearch) ||
-        result.participant?.npm?.toLowerCase().includes(lowerSearch) ||
-        result.participant?.email?.toLowerCase().includes(lowerSearch) ||
-        result.participant?.workshop?.title?.toLowerCase().includes(lowerSearch)
+      filtered = filtered.filter(
+        (result) =>
+          result.participant?.name?.toLowerCase().includes(lowerSearch) ||
+          result.participant?.npm?.toLowerCase().includes(lowerSearch) ||
+          result.participant?.email?.toLowerCase().includes(lowerSearch) ||
+          result.participant?.workshop?.title?.toLowerCase().includes(lowerSearch)
       );
     }
 
@@ -88,7 +84,6 @@ export default function WorkshopResult() {
 
   const totalPages = Math.ceil(total / limit);
 
-  
   // Event handlers
   const handleWorkshopChange = (e) => setSelectedWorkshop(e.target.value);
   const handleStatusChange = (e) => setSelectedStatus(e.target.value);
@@ -138,31 +133,22 @@ export default function WorkshopResult() {
     setShowForm(true);
   };
 
-
-
-
   return (
-    <div className="p-6">
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-xl font-bold">Workshop Results</h1>
-        <button
-          onClick={handleAddNew}
-          className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-medium"
-        >
-          Tambah Result
-        </button>
+    <div className="">
+      <div className="flex justify-between items-center my-2">
+        <h1 className="text-2xl font-bold text-gray-400 ">Workshop Results</h1>
       </div>
-
+      <div className="flex items-end mb-6 ">
+        {/* Search Bar */}
+        <div className="flex space-x-2 h-9">
+          <SearchBar placeholder="Cari nama, NPM, email, atau workshop..." onSearch={(q) => setSearchQuery(q)} />
+          <button onClick={handleAddNew} className="bg-blue-600 hover:bg-blue-700 text-white px-1 py-2 rounded">
+          Add Result
+          </button>
+        </div>
+        <WorkshopResultUpload onUploadSuccess={handleUploadSuccess} />
+      </div>
       {/* Upload Excel */}
-      <WorkshopResultUpload onUploadSuccess={handleUploadSuccess} />
-
-      {/* Search Bar */}
-      <div className="my-4">
-        <SearchBar
-          placeholder="Cari nama, NPM, email, atau workshop..."
-          onSearch={(q) => setSearchQuery(q)}
-        />
-      </div>
 
       {/* Filter Section */}
       <WorkshopResultFilter
@@ -177,13 +163,7 @@ export default function WorkshopResult() {
       />
 
       {/* List */}
-      <WorkshopResultList
-        results={filteredResults}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
-        currentPage={page}
-        itemsPerPage={limit}
-      />
+      <WorkshopResultList results={filteredResults} onEdit={handleEdit} onDelete={handleDelete} currentPage={page} itemsPerPage={limit} />
 
       {/* Pagination */}
       {total > limit && (
@@ -191,18 +171,12 @@ export default function WorkshopResult() {
           <div className="text-gray-400 text-sm">
             Page {page} of {totalPages} pages
           </div>
-          <Pagination
-            currentPage={page}
-            totalPages={totalPages}
-            onPageChange={(newPage) => setPage(newPage)}
-          />
+          <Pagination currentPage={page} totalPages={totalPages} onPageChange={(newPage) => setPage(newPage)} />
         </div>
       )}
 
       {/* Form Edit/Add */}
-      {showForm && (
-        <WorkshopResultForm result={selectedResult} onClose={handleFormClose} />
-      )}
+      {showForm && <WorkshopResultForm result={selectedResult} onClose={handleFormClose} />}
     </div>
   );
 }

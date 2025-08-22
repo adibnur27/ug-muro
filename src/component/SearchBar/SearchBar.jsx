@@ -15,14 +15,15 @@ const SearchBar = ({ onSearch, placeholder }) => {
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
         placeholder={placeholder}
-        className="border border-gray-300 px-3 py-2 rounded-md w-full md:w-64 focus:outline-none focus:ring focus:ring-blue-200"
+        className="border border-gray-300 px-3 py-2 rounded-md w-full md:w-64 focus:outline-none focus:ring focus:ring-blue-600"
       />
       <button
         type="submit"
-        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
       >
         Search
       </button>
+      
     </form>
   );
 };
