@@ -115,6 +115,45 @@ const Workshop = () => {
     );
   }
 
+  const getWorkshopStatus = (workshop) => {
+    const today = new Date();
+    const regOpen = new Date(workshop.registration_open);
+    const regClose = new Date(workshop.registration_close);
+    const startDate = new Date(workshop.start_date);
+    const endDate = new Date(workshop.end_date);
+
+    if (today < regOpen) {
+      return "Upcoming";
+    } else if (today >= regOpen && today <= regClose) {
+      return "Registration Open";
+    } else if (today > regClose && today < startDate) {
+      return "Registration Closed";
+    } else if (today >= startDate && today <= endDate) {
+      return "Ongoing";
+    } else if (today > endDate) {
+      return "Completed";
+    } else {
+      return "Unknown";
+    }
+  };
+
+  const getStatusStyle = (status) => {
+    switch (status) {
+      case "Upcoming":
+        return "bg-blue-100 text-blue-600 px-2 py-1 rounded-full text-xs font-semibold";
+      case "Registration Open":
+        return "bg-green-100 text-green-600 px-2 py-1 rounded-full text-xs font-semibold";
+      case "Registration Closed":
+        return "bg-yellow-100 text-yellow-600 px-2 py-1 rounded-full text-xs font-semibold";
+      case "Ongoing":
+        return "bg-purple-100 text-purple-600 px-2 py-1 rounded-full text-xs font-semibold";
+      case "Completed":
+        return "bg-red-100 text-red-600 px-2 py-1 rounded-full text-xs font-semibold";
+      default:
+        return "bg-gray-100 text-gray-600 px-2 py-1 rounded-full text-xs font-semibold";
+    }
+  };
+
   return (
     <div className="">
       {loadingAction && (
@@ -144,9 +183,11 @@ const Workshop = () => {
               <th className="border-y bg-blue-100  p-2 text-center">Description</th>
               <th className="border-y bg-blue-100  p-2 text-center">Image</th>
               <th className="border-y bg-blue-100  p-2 text-center">Module File</th>
+              <th className="border-y bg-blue-100  p-2 text-center">Status</th>
               <th className="border-y bg-blue-100  p-2 text-center">Reg. Open</th>
               <th className="border-y bg-blue-100  p-2 text-center">Reg. Close</th>
               <th className="border-y bg-blue-100  p-2 text-center">Start Date</th>
+              <th className="border-y bg-blue-100  p-2 text-center">End Date</th>
               <th className="border border-y bg-blue-100 rounded-e  p-2 text-center">Action</th>
             </tr>
           </thead>
@@ -155,7 +196,7 @@ const Workshop = () => {
               <tr key={workshop.id} className="hover:bg-gray-50">
                 <td className="border-s border-y rounded-s p-2 shadow-md shadow-blue-50 text-center">{index + 1 + (currentPage - 1) * itemsPerPage}</td>
                 <td className="border-y p-2 shadow-md shadow-blue-50 text-center">{workshop.title}</td>
-                <td className="border-y p-2 shadow-md shadow-blue-50 w-[30%]">{workshop.description}</td>
+                <td className="border-y py-2 px-1 shadow-md shadow-blue-50 w-[20%]">{workshop.description}</td>
                 <td className="border-y p-2 shadow-md shadow-blue-50">
                   <img src={workshop.image_url} alt={workshop.title} className="w-24 h-16 object-cover rounded" />
                 </td>
@@ -164,27 +205,17 @@ const Workshop = () => {
                     Module
                   </a>
                 </td>
+                <td className="border-y p-2 shadow-md shadow-blue-50 text-center">
+                  <span className={getStatusStyle(getWorkshopStatus(workshop))}>{getWorkshopStatus(workshop)}</span>
+                </td>
                 <td className="border-y p-2 shadow-md shadow-blue-50 text-center">{workshop.registration_open}</td>
                 <td className="border-y p-2 shadow-md shadow-blue-50 text-center">{workshop.registration_close}</td>
                 <td className="border-y p-2 shadow-md shadow-blue-50 text-center">{workshop.start_date}</td>
+                <td className="border-y p-2 shadow-md shadow-blue-50 text-center">{workshop.end_date}</td>
                 <td className="border-e border-y rounded-e p-2 shadow-md shadow-blue-50 space-x-1 space-y-1 text-center">
-                  <ActionButton
-                    hoverShadowColor={"yellow"}
-                    children={
-                      <IconEdit className="text-yellow-600"/>
-                    }
-                    onClick={() => handleEditClick(workshop)}
-                  />
-                  <ActionButton
-                    hoverShadowColor={"red"}
-                    children={
-                     <IconTrash className="text-red-600"/>
-                    }
-                    onClick={() => handleDeleteClick(workshop)}
-                  />
-                  
+                  <ActionButton hoverShadowColor={"yellow"} children={<IconEdit className="text-yellow-600" />} onClick={() => handleEditClick(workshop)} />
+                  <ActionButton hoverShadowColor={"red"} children={<IconTrash className="text-red-600" />} onClick={() => handleDeleteClick(workshop)} />
                 </td>
-                
               </tr>
             ))}
           </tbody>
@@ -195,11 +226,9 @@ const Workshop = () => {
       {totalItems > 0 && (
         <div className="mt-4 flex justify-between  items-center px-2">
           <div className="text-gray-400 text-sm">
-            Page {currentPage} of {totalPages} pages 
+            Page {currentPage} of {totalPages} pages
           </div>
-          <div className="text-gray-400 text-sm">
-            Total Number of Workshops {workshops.length} 
-          </div>
+          <div className="text-gray-400 text-sm">Total Number of Workshops {totalItems}</div>
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages} // ✅ ini yang benar

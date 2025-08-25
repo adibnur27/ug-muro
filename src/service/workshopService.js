@@ -46,7 +46,7 @@ export const uploadFile = async (file, bucket, folder) => {
 
 // add workshop
 export const addWorkshop = async (formData) => {
-  const { title, description, start_date, registration_open, registration_close, image, module } = formData;
+  const { title, description, start_date,end_date, registration_open, registration_close, image, module } = formData;
 
   const imageUrl = await uploadFile(image, "workshop-images", "images");
   const moduleUrl = await uploadFile(module, "workshop-module", "modules");
@@ -56,6 +56,7 @@ export const addWorkshop = async (formData) => {
       title,
       description,
       start_date,
+      end_date,
       registration_open,
       registration_close,
       module_file: moduleUrl,
@@ -68,7 +69,7 @@ export const addWorkshop = async (formData) => {
 
 // update workshop
 export const updateWorkshop = async (id, formData) => {
-  const { title, description, start_date, registration_open, registration_close, image, module } = formData;
+  const { title, description, start_date, end_date, registration_open, registration_close, image, module } = formData;
 
   let imageUrl = null;
   let moduleFile = null;
@@ -89,6 +90,7 @@ export const updateWorkshop = async (id, formData) => {
       title,
       description,
       start_date,
+      end_date,
       registration_open,
       registration_close,
       ...(imageUrl && { image_url: imageUrl }),

@@ -12,6 +12,7 @@ const WorkshopForm = ({ initialData = {}, onSubmit, mode = "add", isSubmitting }
     registration_open: "",
     registration_close: "",
     start_date: "",
+    end_date: "",
   });
 
   useEffect(() => {
@@ -45,6 +46,7 @@ const WorkshopForm = ({ initialData = {}, onSubmit, mode = "add", isSubmitting }
           registration_open: "",
           registration_close: "",
           start_date: "",
+          end_date: "",
         });
       }
     } catch (error) {
@@ -86,6 +88,10 @@ const WorkshopForm = ({ initialData = {}, onSubmit, mode = "add", isSubmitting }
           <div>
             <label>Start Date: </label>
             <input type="date" name="start_date" value={form.start_date} onChange={handleChange} className="input border-2 border-gray-300 px-1 rounded ms-3" required />
+          </div>
+          <div>
+            <label>End Date: </label>
+            <input type="date" name="end_date" value={form.end_date} onChange={handleChange} className="input border-2 border-gray-300 px-1 rounded ms-3" required />
           </div>
         </div>
         <div>

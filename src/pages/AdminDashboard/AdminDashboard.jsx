@@ -48,11 +48,6 @@ import ButtonLogout from "../../component/Button/ButtonLogout";
         icon: <IconLayoutDashboard className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />,
       },
       {
-        label: "Admin Profile",
-        href: "/admin/adminProfile",
-        icon: <IconUser className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200 bg-gray-50 rounded-full" />,
-      },
-      {
         label: "Participants",
         href: "/admin/participants",
         icon: <IconUsersGroup className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />,
