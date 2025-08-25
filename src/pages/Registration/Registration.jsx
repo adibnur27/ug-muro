@@ -1,24 +1,41 @@
-import React, {useState } from "react";
+import React, { useState, useCallback } from "react";
 import Navbar from "../../component/Navbar/Navbar";
-import FormContact from "../Contact/formContact/FormContact";
 import Footer from "../../component/Footer/Footer";
-import WorkShopForm from "./RegistrationForm/WorkShopForm";
-import CourseForm from "./RegistrationForm/CourseForm";
 import Threads from "./ui/Threads";
+import WorkshopFormParticipant from "./Component/WorkshopFormParticipant";
+import Swal from "sweetalert2";
+import { addWorkshop } from "../../service/workshopService";
+import { addParticipant } from "../../service/participantsService";
 
 const Registration = () => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [activeTab, setActiveTab] = useState("workshop");
-
+  // Memoize handleSubmit untuk mencegah re-render berlebihan
+  const handleSubmit = useCallback(async (formData) => {
+    if (isSubmitting) return; // Prevent double submission
+    
+    setIsSubmitting(true);
+    
+    try {
+      await addParticipant(formData);
+      // Success message akan ditangani di component form
+    } catch (error) {
+      console.error("Registration error:", error);
+      // Error akan di-throw kembali ke form untuk ditangani
+      throw error;
+    } finally {
+      setIsSubmitting(false);
+    }
+  }, [isSubmitting]);
 
   return (
-    <div className="bg-deepBlend">
+    <div className="bg-deepBlend min-h-screen">
       <Navbar />
 
       {/* Background Header */}
       <div className="relative h-[400px] overflow-hidden">
         <div
-          className={`absolute inset-0 bg-cover bg-center transition-opacity duration-1000 `}
+          className="absolute inset-0 bg-cover bg-center transition-opacity duration-1000"
           style={{
             backgroundImage: `url(/images/background/registrationBg.webp)`,
           }}
@@ -33,34 +50,27 @@ const Registration = () => {
         </div>
       </div>
 
-      {/* Tab Navigation */}
-      <div className="bg-gradient-to-tr from-[#3d0939] via-[#330754] to-[#3d0939] z-10">
-        <div style={{ width: "100%", height: "900px", position: "absolute", top: "200px" }}>
-          <Threads amplitude={1} distance={0} enableMouseInteraction={true} />
+      {/* Main Content */}
+      <div className="bg-gradient-to-tr from-[#3d0939] via-[#330754] to-[#3d0939] z-10 relative">
+        {/* Threads Background */}
+        <div 
+          style={{ 
+            width: "100%", 
+            height: "900px", 
+            position: "absolute", 
+            top: "0px", // Adjusted position
+            pointerEvents: "none" // Prevent interference with form
+          }}
+        >
+          <Threads amplitude={1} distance={0} enableMouseInteraction={false} />
         </div>
 
-        <div className="flex justify-center pt-8 gap-4 relative font-rajdhani">
-          <button
-            onClick={() => setActiveTab("workshop")}
-            className={`px-6 py-2  font-semibold ${
-              activeTab === "workshop" ? "bg-blue-800 text-white" : "bg-gray-200 text-blue-800 hover:bg-gray-300"
-            }`}
-          >
-            Daftar Workshop
-          </button>
-          <button
-            onClick={() => setActiveTab("course")}
-            className={`px-6 py-2  font-semibold ${
-              activeTab === "course" ? "bg-blue-800 text-white" : "bg-gray-200 text-blue-800 hover:bg-gray-300"
-            }`}
-          >
-            Daftar Kursus
-          </button>
-        </div>
-
-        {/* Form div */}
-        <div className="p-5 lg:py-10 relative">
-          {activeTab === "workshop" ? <WorkShopForm /> : <CourseForm />}
+        {/* Form Container */}
+        <div className="p-5 lg:py-10 relative z-20">
+          <WorkshopFormParticipant 
+            onSubmit={handleSubmit}
+            isSubmitting={isSubmitting}
+          />
         </div>
       </div>
 
