@@ -4,7 +4,6 @@ import Footer from "../../component/Footer/Footer";
 import Threads from "./ui/Threads";
 import WorkshopFormParticipant from "./Component/WorkshopFormParticipant";
 import Swal from "sweetalert2";
-import { addWorkshop } from "../../service/workshopService";
 import { addParticipant } from "../../service/participantsService";
 
 const Registration = () => {
@@ -29,7 +28,7 @@ const Registration = () => {
   }, [isSubmitting]);
 
   return (
-    <div className="bg-deepBlend min-h-screen">
+    <div className="bg-deepBlend min-h-screen overflow-hidden">
       <Navbar />
 
       {/* Background Header */}

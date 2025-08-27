@@ -44,7 +44,7 @@ useEffect(() => {
 }, []);
 
   return (
-    <nav className={`shadow-md md:px-10 pt-5 text-white fixed left-0 right-0 md:left-0 md:right-0 lg:left-10 lg:right-10 top-0 z-50 bg-black/70 lg:bg-transparent transition-transform duration-700 ${showNavbar ? 'translate-y-0' : '-translate-y-full'}`}>
+    <nav className={`shadow-md md:px-10 pt-5 text-white fixed left-0 right-0 md:left-0 md:right-0 lg:left-10 lg:right-10 top-0 z-50 bg-black/70 lg:bg-black/10  transition-transform duration-700 ${showNavbar ? 'translate-y-0' : '-translate-y-full'}`}>
       <div className="flex justify-between items-center">
         {/* Logo */}
         <div className="flex gap-3 items-center ms-10 md:ms-0 lg:ms-0">

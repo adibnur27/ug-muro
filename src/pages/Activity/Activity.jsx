@@ -1,8 +1,70 @@
-import React from "react";
+import React, { useState } from "react";
 import Navbar from "../../component/Navbar/Navbar";
 import Footer from "../../component/Footer/Footer";
+import { useWorkshop } from "../../context/WorkshopContext/WorkshopContext";
+import ActionButton from "../../component/Button/ActionButton";
+import ButtonDetailCardWorkshop from "../../component/Button/ButtonDetailCardWorkshop";
+import Modal from "../../component/Modal/Modal";
+import { useNavigate } from "react-router-dom";
+import WhatsAppButton from "../../component/Button/WhatsAppButton";
 
 const Activity = () => {
+  // modal state
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedWorkshop, setSelectedWorkshop] = useState(null);
+
+  // workshop from context
+  const { workshop } = useWorkshop();
+  
+
+  const navigate = useNavigate();
+
+  console.log(workshop);
+
+  const getWorkshopStatus = (workshop) => {
+    const today = new Date();
+    const regOpen = new Date(workshop.registration_open);
+    const regClose = new Date(workshop.registration_close);
+    const startDate = new Date(workshop.start_date);
+    const endDate = new Date(workshop.end_date);
+
+    if (today < regOpen) {
+      return "Upcoming";
+    } else if (today >= regOpen && today <= regClose) {
+      return "Registration Open";
+    } else if (today > regClose && today < startDate) {
+      return "Registration Closed";
+    } else if (today >= startDate && today <= endDate) {
+      return "Ongoing";
+    } else if (today > endDate) {
+      return "Completed";
+    } else {
+      return "Unknown";
+    }
+  };
+
+  const getStatusStyle = (status) => {
+    switch (status) {
+      case "Upcoming":
+        return "bg-blue-100 text-blue-600 px-1 py-1 rounded text-xs font-semibold";
+      case "Registration Open":
+        return "bg-green-100 text-green-600 px-1 py-1 rounded text-xs font-semibold";
+      case "Registration Closed":
+        return "bg-yellow-100 text-yellow-600 px-1 py-1 rounded text-xs font-semibold";
+      case "Ongoing":
+        return "bg-purple-100 text-purple-600 px-1 py-1 rounded text-xs font-semibold";
+      case "Completed":
+        return "bg-red-100 text-red-600 px-1 py-1 rounded text-xs font-semibold";
+      default:
+        return "bg-gray-100 text-gray-600 px-1 py-1 rounded text-xs font-semibold";
+    }
+  };
+
+  const handleDetailClick = (workshop) => {
+    setIsModalOpen(true);
+    setSelectedWorkshop(workshop);
+  };
+
   return (
     <div className="bg-deepBlend h-screen text-white">
       <Navbar />
@@ -14,88 +76,96 @@ const Activity = () => {
         </div>
       </section>
 
-      {/* Kursus Section */}
+      {/* Workshop Card Section */}
 
       <section className="bg-deepBlend py-16 px-6 md:px-20">
-        <h2 className="text-3xl font-bold font-orbitron text-center mb-10">Program Kursus</h2>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {[
-            {
-              title: "Dasar Pemrograman IoT",
-              desc: "Belajar pemrograman dasar Arduino dan sensor digital. Cocok untuk pemula yang ingin masuk ke dunia embedded system.",
-              image: "/images/course/arduino.webp",
-            },
-            {
-              title: "Pemrograman Python untuk Robotika",
-              desc: "Menggunakan Raspberry Pi untuk automasi robotika berbasis Python.",
-              image: "/images/course/python.webp",
-            },
-            {
-              title: "Pengenalan Sistem Tertanam",
-              desc: "Belajar arsitektur mikrokontroler, komunikasi serial, dan aplikasi praktis.",
-              image: "/images/course/mikrokontroler.webp",
-            },
-          ].map((kursus, i) => (
-            <div key={i} className="bg-gray-100 shadow-lg rounded-xl overflow-hidden hover:shadow-xl transition hover:scale-90">
-              <img src={kursus.image} alt={kursus.title} className="h-48 w-full object-cover" />
-              <div className="p-5">
-                <h3 className="text-xl font-semibold mb-2 text-black">{kursus.title}</h3>
-                <p className="text-gray-600 text-sm">{kursus.desc}</p>
+        <h2 className="text-3xl font-bold font-orbitron text-center mb-10">Workshop</h2>
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {workshop.map((ws, i) => (
+            <div key={ws.id} className="bg-gray-100 shadow-lg rounded-xl overflow-hidden hover:shadow-xl transition hover:scale-105">
+              <img src={ws.image_url} alt={ws.title} className="h-48 w-full object-cover" />
+              <div className="p-5 space-y-2">
+                <span className={getStatusStyle(getWorkshopStatus(workshop[i]))}>{getWorkshopStatus(workshop[i])}</span>
+                <h3 className="text-xl font-semibold text-black">{ws.title}</h3>
+                <p className="text-gray-600 text-sm line-clamp-1">{ws.description}</p>
+                <ButtonDetailCardWorkshop
+                  onClick={() => {
+                    handleDetailClick(ws);
+                  }}
+                />
               </div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* Workshop Section */}
+      {/* help and complaint center */}
 
-      <section className="bg-white text-black py-16 px-6 md:px-20">
-        <h2 className="text-3xl font-bold font-orbitron text-center mb-10">Workshop Unggulan</h2>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {[
-            { 
-              title: "Drone Engineering", 
-              desc: "Pelajari dasar pengoperasian dan perakitan drone secara langsung.", 
-              img: "/images/workshop/workshop-drone.webp" 
-            },
-            { 
-              title: "Mikon Agrotech", 
-              desc: "Automasi pertanian dengan mikrokontroler. Solusi cerdas untuk pertanian modern.", 
-              img: "/images/workshop/workshop-agrotech.webp" 
-            },
-            { title: "Mikon Healthcare", desc: "Rancang prototipe alat kesehatan sederhana berbasis sensor biometrik.", img: "/images/workshop/workshop-health.webp" },
-            { title: "Raspberry Pi Dasar", desc: "Belajar dasar Linux dan kendali GPIO dengan Raspberry Pi.", img: "/images/workshop/workshop-raspi.jpg" },
-            { title: "Robot Berbasis Raspberry", desc: "Bangun robot pintar berbasis Raspberry Pi dan Python.", img: "/images/workshop/workshop-robot.webp" },
-            { title: "Computer Vision & Recognition", desc: "Pengenalan face/object recognition dengan OpenCV dan Python.", img: "/images/workshop/workshop-recognition.webp" },
-          ].map((workshop, i) => (
-            <div key={i} className="bg-white text-black rounded-xl overflow-hidden shadow-lg hover:scale-[1.02] transition">
-              <img src={workshop.img} alt={workshop.title} className="h-44 w-full object-cover" />
-              <div className="p-4">
-                <h3 className="text-lg font-bold">{workshop.title}</h3>
-                <p className="text-sm mt-1">{workshop.desc}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
+      <section className="bg-deepBlend">
+        <div className="py-8"> 
+          <h3 className="text-3xl font-bold font-orbitron text-center mb-14" >Pusat Bantuan Dan Aduan </h3>
+          <div className="mx-auto w-full text-center my-10">
 
-      {/* ESC (Embedded System Competition) */}
-
-      <section className="bg-deepBlend py-16 px-6 md:px-20">
-        <div className="max-w-5xl mx-auto text-center">
-          <h2 className="text-3xl font-orbitron font-bold mb-4">Embedded System Competition (ESC)</h2>
-          <p className="font-rajdhani text-lg text-white mb-6">
-            ESC adalah ajang tahunan untuk mahasiswa dan siswa tingkat akhir yang ingin menunjukkan inovasi terbaik dalam bidang embedded system. Kompetisi ini meliputi kategori robotika, agroteknologi, dan healthcare dengan penilaian
-            langsung dari praktisi industri dan akademisi.
-          </p>
-          <img src="/images/workshop/workshop-robot.webp" alt="ESC Competition" className="mx-auto rounded-lg shadow-xl max-h-[400px] object-cover" />
-          <div className="mt-6">
-            <a href="/esc" className="inline-block bg-blue-700 hover:bg-blue-800 text-white font-semibold px-6 py-3 rounded-md">
-              Lihat Detail Kompetisi
-            </a>
+          <WhatsAppButton/>
           </div>
         </div>
       </section>
+
+
+
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+          setSelectedWorkshop(null);
+        }}
+      >
+        {selectedWorkshop && (
+          <div className="bg-white rounded-xl shadow-lg p-6 mt-5">
+            {/* Header */}
+            <div className="flex justify-between items-start gap-6">
+              <div>
+                <h3 className="uppercase text-2xl font-bold text-gray-900">{selectedWorkshop.title}</h3>
+                <span className={`inline-block mt-2 px-3 py-1 rounded-full text-xs font-medium ${getStatusStyle(getWorkshopStatus(selectedWorkshop))}`}>{getWorkshopStatus(selectedWorkshop)}</span>
+                {getWorkshopStatus(selectedWorkshop) === "Registration Open" && (
+                  <button className="text-black border-black border px-4 rounded hover:bg-black hover:text-white block mt-5" onClick={() => {navigate("/daftar")}}>
+                    Daftar
+                  </button>
+                )}
+              </div>
+
+              <img src={selectedWorkshop.image_url} alt={selectedWorkshop.title} className="w-40 h-28 object-cover rounded-lg shadow-md" />
+            </div>
+
+            {/* Body */}
+            <div className="mt-6 space-y-3 text-gray-700">
+              <a href={selectedWorkshop.module_file} className="text-blue-600 hover:underline font-medium" target="_blank" rel="noopener noreferrer">
+                📄 Download Module
+              </a>
+
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <p>
+                  <span className="font-semibold">Pendaftaran Dibuka:</span> {selectedWorkshop.registration_open}
+                </p>
+                <p>
+                  <span className="font-semibold">Pendaftaran Ditutup:</span> {selectedWorkshop.registration_close}
+                </p>
+                <p>
+                  <span className="font-semibold">Tanggal Mulai:</span> {selectedWorkshop.start_date}
+                </p>
+                <p>
+                  <span className="font-semibold">Tanggal Selesai:</span> {selectedWorkshop.end_date}
+                </p>
+              </div>
+
+              <div>
+                <h4 className="font-semibold text-gray-900">Deskripsi</h4>
+                <p className="text-gray-600 mt-1">{selectedWorkshop.description}</p>
+              </div>
+            </div>
+          </div>
+        )}
+      </Modal>
 
       <Footer />
     </div>

@@ -77,8 +77,8 @@ const Research = () => {
       <section className="py-16 bg-white text-center">
         <h2 className="text-3xl font-bold font-orbitron text-blue-800">Fokus Riset Kami</h2>
         <div className="grid md:grid-cols-3 gap-10 mt-10 px-10">
-          {focusData.map((item) => (
-            <div key={item.title} className="bg-deepBlend rounded-xl shadow-md pb-2 hover:shadow-xl transition-all duration-100">
+          {focusData.map((item,i) => (
+            <div key={item.title[i]} className="bg-deepBlend rounded-xl shadow-md pb-2 hover:shadow-xl transition-all duration-100">
               <img src={item.image} alt={item.title} className="h-48 w-full object-cover mb-4 rounded-t-xl" />
               <h3 className="text-xl font-semibold">{item.title}</h3>
               <p className="mt-2 text-gray-600">{item.description}</p>
@@ -92,8 +92,8 @@ const Research = () => {
       <section className="py-16 bg-gray-100">
         <h2 className="text-3xl font-bold text-center font-orbitron text-blue-800">Proyek Riset Terkini</h2>
         <div className="grid md:grid-cols-3 gap-8 mt-10 px-10">
-          {projects.map((project) => (
-            <div key={project.title} className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition duration-300">
+          {projects.map((project,i) => (
+            <div key={i} className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition duration-300">
               <img src={project.image} alt={project.title} className="w-full h-52 object-cover" />
               <div className="p-4">
                 <h3 className="text-lg font-semibold">{project.title}</h3>
@@ -109,8 +109,8 @@ const Research = () => {
       <section className="py-16 bg-deepBlend">
         <h2 className="text-3xl font-bold text-center font-orbitron text-blue-800">Publikasi Ilmiah</h2>
         <div className="max-w-4xl mx-auto mt-10 px-6">
-          {[...publications, ...publications].map((pub) => (
-            <div key={pub.title} className="border-l-4 bg-black/50 border-blue-800 pl-4 py-4 mb-4">
+          {[...publications, ...publications].map((pub,i) => (
+            <div key={i} className="border-l-4 bg-black/50 border-blue-800 pl-4 py-4 mb-4">
               <h3 className="font-semibold">{pub.title}</h3>
               <p className="text-sm text-gray-600">{pub.authors}</p>
               <p className="text-sm italic text-gray-500">
