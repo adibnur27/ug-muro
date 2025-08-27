@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../../component/Navbar/Navbar";
 import Footer from "../../component/Footer/Footer";
 import { useWorkshop } from "../../context/WorkshopContext/WorkshopContext";
 import ActionButton from "../../component/Button/ActionButton";
-import ButtonDetailCardWorkshop from "../../component/Button/ButtonDetailCardWorkshop";
+import ButtonActivity from "../../component/Button/ButtonActivity";
 import Modal from "../../component/Modal/Modal";
 import { useNavigate } from "react-router-dom";
 import WhatsAppButton from "../../component/Button/WhatsAppButton";
@@ -15,7 +15,6 @@ const Activity = () => {
 
   // workshop from context
   const { workshop } = useWorkshop();
-  
 
   const navigate = useNavigate();
 
@@ -65,6 +64,23 @@ const Activity = () => {
     setSelectedWorkshop(workshop);
   };
 
+  useEffect(() => {
+    const handleEsc = (event) => {
+      if (event.key === "Escape") {
+        setIsModalOpen(false);
+        setSelectedWorkshop(null);
+      }
+    };
+
+    if (isModalOpen) {
+      window.addEventListener("keydown", handleEsc);
+    }
+
+    return () => {
+      window.removeEventListener("keydown", handleEsc);
+    };
+  }, [isModalOpen]);
+
   return (
     <div className="bg-deepBlend h-screen text-white">
       <Navbar />
@@ -88,7 +104,8 @@ const Activity = () => {
                 <span className={getStatusStyle(getWorkshopStatus(workshop[i]))}>{getWorkshopStatus(workshop[i])}</span>
                 <h3 className="text-xl font-semibold text-black">{ws.title}</h3>
                 <p className="text-gray-600 text-sm line-clamp-1">{ws.description}</p>
-                <ButtonDetailCardWorkshop
+                <ButtonActivity
+                  children={"Selengkapnya"}
                   onClick={() => {
                     handleDetailClick(ws);
                   }}
@@ -102,35 +119,37 @@ const Activity = () => {
       {/* help and complaint center */}
 
       <section className="bg-deepBlend">
-        <div className="py-8"> 
-          <h3 className="text-3xl font-bold font-orbitron text-center mb-14" >Pusat Bantuan Dan Aduan </h3>
+        <div className="py-8">
+          <h3 className="text-3xl font-bold font-orbitron text-center mb-14">Pusat Bantuan Dan Aduan </h3>
           <div className="mx-auto w-full text-center my-10">
-
-          <WhatsAppButton/>
+            <WhatsAppButton />
           </div>
         </div>
       </section>
 
-
-
       <Modal
         isOpen={isModalOpen}
         onClose={() => {
-          setIsModalOpen(false);
+          if (event.key === "Escape") {
+            setIsModalOpen(false);
+          }
           setSelectedWorkshop(null);
         }}
       >
         {selectedWorkshop && (
-          <div className="bg-white rounded-xl shadow-lg p-6 mt-5">
+          <div className=" rounded-xl shadow-lg p-6 mt-5">
             {/* Header */}
             <div className="flex justify-between items-start gap-6">
               <div>
                 <h3 className="uppercase text-2xl font-bold text-gray-900">{selectedWorkshop.title}</h3>
-                <span className={`inline-block mt-2 px-3 py-1 rounded-full text-xs font-medium ${getStatusStyle(getWorkshopStatus(selectedWorkshop))}`}>{getWorkshopStatus(selectedWorkshop)}</span>
+                <span className={`inline-block my-2 px-3  py-1 rounded-full text-xs font-medium ${getStatusStyle(getWorkshopStatus(selectedWorkshop))}`}>{getWorkshopStatus(selectedWorkshop)}</span>
                 {getWorkshopStatus(selectedWorkshop) === "Registration Open" && (
-                  <button className="text-black border-black border px-4 rounded hover:bg-black hover:text-white block mt-5" onClick={() => {navigate("/daftar")}}>
-                    Daftar
-                  </button>
+                  <ButtonActivity
+                    onClick={() => {
+                      navigate("/daftar");
+                    }}
+                    children={"Daftar"}
+                  />
                 )}
               </div>
 

@@ -45,7 +45,7 @@ const StyledWrapper = styled.div`
     width: 100%;
     height: 100%;
     background: rgba(37, 211, 102, 1);
-    transition: ease-in-out 0.3s;
+    transition: ease-in-out .8s;
     color: #fff;
     display: flex;
     align-items: center;

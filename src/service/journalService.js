@@ -41,7 +41,7 @@ export const addJournal = async(title,authors,fileUrl) => {
 }
 
 
-export const getJournal = async(search = "",page = 1, limit) => {
+export const getJournal = async(search = "",page = 1, limit = 1000) => {
 
     const from = (page - 1) * limit;
     const to = from + limit - 1;

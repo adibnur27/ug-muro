@@ -9,6 +9,7 @@ export default function Modal({ isOpen, onClose, children }) {
         <button
           onClick={onClose}
           className="absolute top-3 right-3 text-gray-500 hover:text-red-500"
+          tabIndex={"esc"}
         >
           ✕
         </button>
