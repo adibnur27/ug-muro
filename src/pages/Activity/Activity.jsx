@@ -18,7 +18,7 @@ const Activity = () => {
 
   const navigate = useNavigate();
 
-  console.log(workshop);
+  console.log("workshop from context",workshop);
 
   const getWorkshopStatus = (workshop) => {
     const today = new Date();
@@ -41,6 +41,7 @@ const Activity = () => {
       return "Unknown";
     }
   };
+  
 
   const getStatusStyle = (status) => {
     switch (status) {
@@ -63,6 +64,7 @@ const Activity = () => {
     setIsModalOpen(true);
     setSelectedWorkshop(workshop);
   };
+  console.log("selectedWorkshop data:", selectedWorkshop);
 
   useEffect(() => {
     const handleEsc = (event) => {
@@ -97,11 +99,35 @@ const Activity = () => {
       <section className="bg-deepBlend py-16 px-6 md:px-20">
         <h2 className="text-3xl font-bold font-orbitron text-center mb-10">Workshop</h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {workshop.map((ws, i) => (
+          {workshop.map((ws,) => (
             <div key={ws.id} className="bg-gray-100 shadow-lg rounded-xl overflow-hidden hover:shadow-xl transition hover:scale-105">
               <img src={ws.image_url} alt={ws.title} className="h-48 w-full object-cover" />
               <div className="p-5 space-y-2">
-                <span className={getStatusStyle(getWorkshopStatus(workshop[i]))}>{getWorkshopStatus(workshop[i])}</span>
+               
+                <h3 className="text-xl font-semibold text-black">{ws.title}</h3>
+                <p className="text-gray-600 text-sm line-clamp-1">{ws.description}</p>
+                <ButtonActivity
+                  children={"Selengkapnya"}
+                  onClick={() => {
+                    handleDetailClick(ws);
+                  }}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+          {/* Workshop resuslt card section */}
+
+      <section className="bg-deepBlend py-16 px-6 md:px-20">
+        <h2 className="text-3xl font-bold font-orbitron text-center mb-10">Workshop Result</h2>
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {workshop.map((ws,) => (
+            <div key={ws.id} className="bg-gray-100 shadow-lg rounded-xl overflow-hidden hover:shadow-xl transition hover:scale-105">
+              <img src={ws.image_url} alt={ws.title} className="h-48 w-full object-cover" />
+              <div className="p-5 space-y-2">
+               
                 <h3 className="text-xl font-semibold text-black">{ws.title}</h3>
                 <p className="text-gray-600 text-sm line-clamp-1">{ws.description}</p>
                 <ButtonActivity
@@ -133,42 +159,28 @@ const Activity = () => {
           if (event.key === "Escape") {
             setIsModalOpen(false);
           }
+          setIsModalOpen(false);
           setSelectedWorkshop(null);
         }}
       >
         {selectedWorkshop && (
-          <div className=" rounded-xl shadow-lg p-6 mt-5">
-            {/* Header */}
-            <div className="flex justify-between items-start gap-6">
-              <div>
-                <h3 className="uppercase text-2xl font-bold text-gray-900">{selectedWorkshop.title}</h3>
-                <span className={`inline-block my-2 px-3  py-1 rounded-full text-xs font-medium ${getStatusStyle(getWorkshopStatus(selectedWorkshop))}`}>{getWorkshopStatus(selectedWorkshop)}</span>
-                {getWorkshopStatus(selectedWorkshop) === "Registration Open" && (
-                  <ButtonActivity
-                    onClick={() => {
-                      navigate("/daftar");
-                    }}
-                    children={"Daftar"}
-                  />
-                )}
-              </div>
-
-              <img src={selectedWorkshop.image_url} alt={selectedWorkshop.title} className="w-40 h-28 object-cover rounded-lg shadow-md" />
-            </div>
-
-            {/* Body */}
-            <div className="mt-6 space-y-3 text-gray-700">
-              <a href={selectedWorkshop.module_file} className="text-blue-600 hover:underline font-medium" target="_blank" rel="noopener noreferrer">
+          <div className=" flex justify-between rounded-xl shadow-lg p-6 mt-5">
+            {/* text */}
+            <div className="space-y-5">
+              <h3 className="uppercase text-2xl font-bold text-gray-900">{selectedWorkshop.title}</h3>
+              {getWorkshopStatus(selectedWorkshop) === "Registration Open" && (
+                <ButtonActivity
+                  onClick={() => {
+                    window.open(selectedWorkshop.registration_link, "_blank", "noopener,noreferrer");
+                  }}
+                  children={"Daftar"}
+                />
+              )}
+              <a href={selectedWorkshop.module_file} className="text-blue-600 hover:underline font-medium  mt-3" target="_blank" rel="noopener noreferrer">
                 📄 Download Module
               </a>
 
-              <div className="grid grid-cols-2 gap-4 text-sm">
-                <p>
-                  <span className="font-semibold">Pendaftaran Dibuka:</span> {selectedWorkshop.registration_open}
-                </p>
-                <p>
-                  <span className="font-semibold">Pendaftaran Ditutup:</span> {selectedWorkshop.registration_close}
-                </p>
+              <div className="text-black">
                 <p>
                   <span className="font-semibold">Tanggal Mulai:</span> {selectedWorkshop.start_date}
                 </p>
@@ -181,6 +193,17 @@ const Activity = () => {
                 <h4 className="font-semibold text-gray-900">Deskripsi</h4>
                 <p className="text-gray-600 mt-1">{selectedWorkshop.description}</p>
               </div>
+            </div>
+
+            {/* Foto */}
+            <div className="space-y-10">
+              <img src={selectedWorkshop.image_url} alt={selectedWorkshop.title} className="w-40 h-28 object-cover rounded-lg shadow-md" />
+              <ButtonActivity
+                  children={"Daftar"}
+                  onClick={() => {
+                    navigate('/daftar')
+                  }}
+                />
             </div>
           </div>
         )}

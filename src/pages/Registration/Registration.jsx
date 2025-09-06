@@ -5,10 +5,13 @@ import Threads from "./ui/Threads";
 import WorkshopFormParticipant from "./Component/WorkshopFormParticipant";
 import Swal from "sweetalert2";
 import { addParticipant } from "../../service/participantsService";
+import { useWorkshop } from "../../context/WorkshopContext/WorkshopContext";
+import ButtonActivity from "../../component/Button/ButtonActivity";
+import WhatsAppButton from "../../component/Button/WhatsAppButton";
 
 const Registration = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  const { workshop } = useWorkshop();
   // Memoize handleSubmit untuk mencegah re-render berlebihan
   const handleSubmit = useCallback(async (formData) => {
     if (isSubmitting) return; // Prevent double submission
@@ -61,16 +64,47 @@ const Registration = () => {
             pointerEvents: "none" // Prevent interference with form
           }}
         >
-          <Threads amplitude={1} distance={0} enableMouseInteraction={false} />
+          {/* <Threads amplitude={1} distance={0} enableMouseInteraction={false} /> */}
         </div>
 
         {/* Form Container */}
-        <div className="p-5 lg:py-10 relative z-20">
-          <WorkshopFormParticipant 
-            onSubmit={handleSubmit}
-            isSubmitting={isSubmitting}
-          />
+        <section className="bg-deepBlend py-16 px-6 md:px-20">
+        <h2 className="text-3xl font-bold font-orbitron text-center mb-10 text-white">Workshop</h2>
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {workshop.map((ws,) => (
+            <div key={ws.id} className="bg-gray-100 shadow-lg rounded-xl overflow-hidden hover:shadow-xl transition hover:scale-105">
+              <img src={ws.image_url} alt={ws.title} className="h-48 w-full object-cover" />
+              <div className="p-5 space-y-2">
+               
+                <h3 className="text-xl font-semibold text-black">{ws.title}</h3>
+                <p className="text-gray-600 text-sm line-clamp-1">{ws.description}</p>
+                <div className="flex gap-5">
+
+                <ButtonActivity
+                  children={"Pengajuan Blanko"}
+                   onClick={() => window.open(ws.registration_link, "_blank")}
+                />
+                <ButtonActivity
+                  children={"Konfirmasi Pembayaran"}
+                   onClick={() => window.open(ws.payment_confirmation_link, "_blank")}
+                />
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
+      </section>
+
+      {/* help and complaint center */}
+
+      <section className="bg-deepBlend">
+        <div className="py-8">
+          <h3 className="text-3xl font-bold font-orbitron text-center mb-14 text-white">Pusat Bantuan Dan Aduan </h3>
+          <div className="mx-auto w-full text-center my-10">
+            <WhatsAppButton />
+          </div>
+        </div>
+      </section>
       </div>
 
       <Footer />

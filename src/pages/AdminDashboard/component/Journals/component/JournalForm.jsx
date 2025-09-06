@@ -11,6 +11,8 @@ export default function JournalForm({
   console.log(initialData);
   const [title, setTitle] = useState(initialData?.title || "");
   const [authors, setAuthors] = useState(initialData?.authors || "");
+  const [publisher, setPublisher] = useState(initialData?.publisher || "");
+  const [published_at, setPublished_at] = useState(initialData?.published_at || "");
   const [file, setFile] = useState(null);
 
   // kalau ada perubahan pada initialData (misalnya edit)
@@ -18,6 +20,8 @@ useEffect(() => {
   if (mode === "edit" && initialData) {
     setTitle(initialData.title || "");
     setAuthors(initialData.authors || "");
+    setPublisher(initialData.publisher || "");
+    setPublished_at(initialData.published_at || "");
   }
 }, [initialData, mode]);
 
@@ -25,7 +29,7 @@ useEffect(() => {
     console.log(title,authors,file);
     e.preventDefault();
     try {
-      await onSubmit({ title, authors, file });
+      await onSubmit({ title, authors,publisher, published_at, file });
     } catch (error) {
       Swal.fire(
         "Error",
@@ -70,6 +74,36 @@ useEffect(() => {
           value={authors}
           onChange={(e) => setAuthors(e.target.value)}
           placeholder="Masukkan Penulis"
+          required
+          className="mt-1 block w-full rounded-lg border border-gray-300 p-2 text-sm shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
+        />
+      </div>
+      <div>
+        <label htmlFor="publisher" className="block text-sm font-medium text-gray-700">
+          Publisher
+        </label>
+        <input
+          type="text"
+          id="publisher"
+          name="publisher"
+          value={publisher}
+          onChange={(e) => setPublisher(e.target.value)}
+          placeholder="Masukkan Penerbit"
+          required
+          className="mt-1 block w-full rounded-lg border border-gray-300 p-2 text-sm shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
+        />
+      </div>
+      <div>
+        <label htmlFor="published_at" className="block text-sm font-medium text-gray-700">
+          Tanggal Terbit
+        </label>
+        <input
+          type="date"
+          id="published_at"
+          name="published_at"
+          value={published_at}
+          onChange={(e) => setPublished_at(e.target.value)}
+          placeholder="Masukkan Tanggal Terbit"
           required
           className="mt-1 block w-full rounded-lg border border-gray-300 p-2 text-sm shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
         />

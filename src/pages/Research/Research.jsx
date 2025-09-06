@@ -4,29 +4,25 @@ import Footer from "../../component/Footer/Footer";
 import { SparklesCore } from "../../component/ui/sparkles";
 import { getJournal } from "../../service/journalService";
 import Swal from "sweetalert2";
+import { IconBook, IconBook2, IconNotebook, IconNotebookOff } from "@tabler/icons-react";
 
 const Research = () => {
+  const [journals, setJournals] = useState([]);
+  const [TotalItems, setTotalItems] = useState(0);
 
-  const [journals,setJournals] = useState([]);
-  const [TotalItems,setTotalItems] = useState(0);
+  const getDataJournal = async () => {
+    try {
+      const { data, count } = await getJournal("", 1, 1000);
+      setJournals(data || []);
+      setTotalItems(count || 0);
+    } catch (error) {
+      Swal.fire("error", `Journal Gagal diload${error}`, "error");
+    }
+  };
 
-    const getDataJournal = async () => {
-      try {
-        const { data, count } = await getJournal("", 1, 1000);
-        setJournals(data || []);
-        setTotalItems(count || 0);
-      } catch (error) {
-        Swal.fire("error", `Journal Gagal diload${error}`, "error");
-      }
-    };
-
-    useEffect(() => {
-      getDataJournal();
-    },[])
-
-
-
-
+  useEffect(() => {
+    getDataJournal();
+  }, []);
 
   return (
     <div className="bg-deepBlend h-screen text-white">
@@ -48,13 +44,25 @@ const Research = () => {
         <h2 className="text-3xl font-bold text-center font-orbitron text-blue-800">Publikasi Ilmiah</h2>
         <div className="max-w-4xl mx-auto mt-10 px-6">
           {journals.map((journal) => (
-            <div key={journal.id} className="border-l-4 bg-deepBlend border-blue-800 pl-4 py-4 mb-4">
-              <h3 className="font-semibold">{journal.title}</h3>
-              <p className="text-sm text-gray-600">{journal.authors}</p>
-              <a href={journal.file_url} className="text-sm underline text-gray-100">
-                Journal File
-              </a>
-              
+            <div key={journal.id} className="border-l-4 bg-deepBlend border-blue-800 px-4 py-4 mb-4 flex justify-between">
+              <div className="flex flex-col gap-2">
+                <h3 className="font-bold text-xl">{journal.title}</h3>
+                <p className="text-sm text-white">
+                  Penulis: <span className="text-white font-bold">{journal.authors} </span>
+                </p>
+                <p className="text-sm text-white">
+                  Penerbit: <span className="text-white font-bold">{journal.publisher}</span>
+                </p>
+                <p className="text-sm text-white">
+                  Tanggal Terbit: <span className="text-white font-bold">{journal.published_at}</span>
+                </p>
+                <a href={journal.file_url} className="text-sm underline text-blue-200">
+                  Journal File
+                </a>
+              </div>
+              <div className="w-[18%] bg-blue-950/10 rounded-full shadow-2xl shadow-blue-950">
+                <img src="/icon/3dicons-notebook-dynamic-color.png" alt="Journal Icon" className="w-full h-auto drop-shadow-[5px_5px_20px_rgb(23,37,84)]" />
+              </div>
             </div>
           ))}
         </div>

@@ -21,13 +21,15 @@ export const uploadJournal = async(file) => {
     return urlData.publicUrl;
 }
 
-export const addJournal = async(title,authors,fileUrl) => {
+export const addJournal = async(title,authors,publisher,published_at,fileUrl) => {
     const {data, error} = await supabase
     .from("journals")
     .insert([
         {
             title,
             authors,
+            publisher,
+            published_at,
             file_url: fileUrl,
         },
     ]);
@@ -64,14 +66,16 @@ export const getJournal = async(search = "",page = 1, limit = 1000) => {
 }
 
 
-export const updateJournal = async(id,title,authors,fileUrl) => {
+export const updateJournal = async(id,title,authors,publisher,published_at,fileUrl) => {
 
     const {data, error} = await supabase
     .from("journals")
     .update({
-        title: title,
-        authors: authors,
-        file_url: fileUrl
+        title,
+            authors,
+            publisher,
+            published_at,
+            file_url: fileUrl,
     })
     .eq("id",id);
 

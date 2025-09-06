@@ -9,8 +9,8 @@ const WorkshopForm = ({ initialData = {}, onSubmit, mode = "add", isSubmitting }
     description: "",
     image: null,
     module: null,
-    registration_open: "",
-    registration_close: "",
+    registration_link: "",
+    payment_confirmation_link: "",
     start_date: "",
     end_date: "",
   });
@@ -23,6 +23,8 @@ const WorkshopForm = ({ initialData = {}, onSubmit, mode = "add", isSubmitting }
       }));
     }
   }, [initialData]);
+
+  console.log(initialData);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -43,8 +45,8 @@ const WorkshopForm = ({ initialData = {}, onSubmit, mode = "add", isSubmitting }
           description: "",
           image: null,
           module: null,
-          registration_open: "",
-          registration_close: "",
+          registration_link: "",
+          payment_confirmation_link: "",
           start_date: "",
           end_date: "",
         });
@@ -74,15 +76,13 @@ const WorkshopForm = ({ initialData = {}, onSubmit, mode = "add", isSubmitting }
             <label htmlFor="description">Description</label>
             <textarea name="description" value={form.description} onChange={handleChange} className="w-full border border-gray-300 p-2 rounded" required />
           </div>
-
           <div>
-            <label>Registration Open: </label>
-            <input type="date" name="registration_open" value={form.registration_open} onChange={handleChange} className="input border-2 border-gray-300 px-1 rounded ms-3" required />
+            <label htmlFor="registration_link">Registration Link</label>
+            <input type="text" name="registration_link" value={form.registration_link} placeholder="Add Registration Link" onChange={handleChange} className="w-full border border-gray-300 p-2 rounded" required />
           </div>
-
           <div>
-            <label>Registration Close: </label>
-            <input type="date" name="registration_close" value={form.registration_close} onChange={handleChange} className="input border-2 border-gray-300 px-1 rounded ms-3" required />
+            <label htmlFor="payment_confirmation_link">payment Confirmation Link</label>
+            <input type="text" name="payment_confirmation_link" value={form.payment_confirmation_link} placeholder="Add Payment Confirmation Link" onChange={handleChange} className="w-full border border-gray-300 p-2 rounded" required />
           </div>
 
           <div>

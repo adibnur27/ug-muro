@@ -20,7 +20,7 @@ const PhotoItem = ({
   };
 
   return (
-    <div className="relative group bg-white rounded-lg shadow-sm hover:shadow-lg transition-all duration-200 overflow-hidden">
+    <div className="relative group rounded-lg shadow-sm hover:shadow-lg transition-all duration-200 overflow-hidden">
       {/* Selection Checkbox */}
       {isSelectable && (
         <div className="absolute top-2 left-2 z-10">
@@ -82,8 +82,8 @@ const PhotoItem = ({
       </div>
 
       {/* Photo Info */}
-      <div className="p-3">
-        <div className="flex items-center justify-between text-xs text-gray-500">
+      <div className="p-3 absolute bottom-0 group-hover:bg-black/50 left-0 right-0 transition-all duration-200">
+        <div className="flex items-center justify-between text-xs group-hover:text-white group-hover:font-bold text-gray-500">
           <span className="truncate flex-1 pr-2">
             {photo.albums?.title || 'Unknown Album'}
           </span>

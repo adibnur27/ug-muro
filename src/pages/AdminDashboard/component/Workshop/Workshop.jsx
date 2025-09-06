@@ -39,6 +39,7 @@ const Workshop = () => {
       setLoadingTable(false);
     }
   };
+  console.log("workshop", workshops);
 
   // Ambil data saat searchTerm / currentPage berubah
   useEffect(() => {
@@ -115,44 +116,6 @@ const Workshop = () => {
     );
   }
 
-  const getWorkshopStatus = (workshop) => {
-    const today = new Date();
-    const regOpen = new Date(workshop.registration_open);
-    const regClose = new Date(workshop.registration_close);
-    const startDate = new Date(workshop.start_date);
-    const endDate = new Date(workshop.end_date);
-
-    if (today < regOpen) {
-      return "Upcoming";
-    } else if (today >= regOpen && today <= regClose) {
-      return "Registration Open";
-    } else if (today > regClose && today < startDate) {
-      return "Registration Closed";
-    } else if (today >= startDate && today <= endDate) {
-      return "Ongoing";
-    } else if (today > endDate) {
-      return "Completed";
-    } else {
-      return "Unknown";
-    }
-  };
-
-  const getStatusStyle = (status) => {
-    switch (status) {
-      case "Upcoming":
-        return "bg-blue-100 text-blue-600 px-2 py-1 rounded-full text-xs font-semibold";
-      case "Registration Open":
-        return "bg-green-100 text-green-600 px-2 py-1 rounded-full text-xs font-semibold";
-      case "Registration Closed":
-        return "bg-yellow-100 text-yellow-600 px-2 py-1 rounded-full text-xs font-semibold";
-      case "Ongoing":
-        return "bg-purple-100 text-purple-600 px-2 py-1 rounded-full text-xs font-semibold";
-      case "Completed":
-        return "bg-red-100 text-red-600 px-2 py-1 rounded-full text-xs font-semibold";
-      default:
-        return "bg-gray-100 text-gray-600 px-2 py-1 rounded-full text-xs font-semibold";
-    }
-  };
 
   return (
     <div className="">
@@ -183,9 +146,8 @@ const Workshop = () => {
               <th className="border-y bg-blue-100  p-2 text-center">Description</th>
               <th className="border-y bg-blue-100  p-2 text-center">Image</th>
               <th className="border-y bg-blue-100  p-2 text-center">Module File</th>
-              <th className="border-y bg-blue-100  p-2 text-center">Status</th>
-              <th className="border-y bg-blue-100  p-2 text-center">Reg. Open</th>
-              <th className="border-y bg-blue-100  p-2 text-center">Reg. Close</th>
+              <th className="border-y bg-blue-100  p-2 text-center">Registration Link</th>
+              <th className="border-y bg-blue-100  p-2 text-center">payment confirmation link</th>
               <th className="border-y bg-blue-100  p-2 text-center">Start Date</th>
               <th className="border-y bg-blue-100  p-2 text-center">End Date</th>
               <th className="border border-y bg-blue-100 rounded-e  p-2 text-center">Action</th>
@@ -206,10 +168,23 @@ const Workshop = () => {
                   </a>
                 </td>
                 <td className="border-y p-2 shadow-md shadow-blue-50 text-center">
-                  <span className={getStatusStyle(getWorkshopStatus(workshop))}>{getWorkshopStatus(workshop)}</span>
+                  {workshop.registration_link ? (
+                    <a href={workshop.registration_link} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">
+                      Registration Link
+                    </a>
+                  ) : (
+                    <p className="text-gray-500 italic">Registration link not defined</p>
+                  )}
                 </td>
-                <td className="border-y p-2 shadow-md shadow-blue-50 text-center">{workshop.registration_open}</td>
-                <td className="border-y p-2 shadow-md shadow-blue-50 text-center">{workshop.registration_close}</td>
+                <td className="border-y p-2 shadow-md shadow-blue-50 text-center">
+                  {workshop.payment_confirmation_link ? (
+                    <a href={workshop.payment_confirmation_link} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">
+                      Link Confirm payment
+                    </a>
+                  ) : (
+                    <p className="text-gray-500 italic">Payment confirmation link not defined</p>
+                  )}
+                </td>
                 <td className="border-y p-2 shadow-md shadow-blue-50 text-center">{workshop.start_date}</td>
                 <td className="border-y p-2 shadow-md shadow-blue-50 text-center">{workshop.end_date}</td>
                 <td className="border-e border-y rounded-e p-2 shadow-md shadow-blue-50 space-x-1 space-y-1 text-center">

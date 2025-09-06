@@ -9,6 +9,7 @@ import {
 import AlbumCard from "./AlbumCard";
 import PhotoItem from "./PhotoItem";
 import PhotoModal from "./PhotoModal";
+import ButtonGallery from "./ButtonGallery";
 
 const   GalleryDisplay = ({ refreshTrigger }) => {
   const [albums, setAlbums] = useState([]);
@@ -69,6 +70,7 @@ const   GalleryDisplay = ({ refreshTrigger }) => {
     }
   }, [view, loadAlbums, refreshTrigger]);
 
+  console.log("view", view);
 
   // --- Modal Handlers ---
 
@@ -104,7 +106,7 @@ const   GalleryDisplay = ({ refreshTrigger }) => {
 
     if (view === "albums") {
       return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {albums.map((album) => (
             <AlbumCard
               key={album.id}
@@ -137,27 +139,32 @@ const   GalleryDisplay = ({ refreshTrigger }) => {
 
   return (
     <div className=" p-6 rounded-lg shadow-md">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-bold text-white">
+      <div className="flex justify-between items-center mb-14">
+        <h2 className="text-2xl font-bold text-white uppercase">
           {view === "albums" && "Daftar Album"}
           {view === "photos" && `Foto di Album: ${selectedAlbum?.title}`}
           {view === "all-photos" && "Semua Foto"}
         </h2>
         <div>
           {view !== "albums" && (
-            <button
-              onClick={() => setView("albums")}
-              className="mr-2 px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
-            >
-              Kembali ke Album
-            </button>
+            // <button
+            //   onClick={() => setView("albums")}
+            //   className="mr-2 px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+            // >
+            //   Kembali ke Album
+            // </button>
+            <ButtonGallery onClick={() => setView("albums")} children={"Kembali Ke Album"}/>
           )}
-          <button
-            onClick={loadAllPhotos}
-            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-          >
-            Lihat Semua Foto
-          </button>
+          {view === "albums" && (
+
+          // <button
+          //   onClick={loadAllPhotos}
+          //   className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+          // >
+          //   Lihat Semua Foto
+          // </button>
+          <ButtonGallery onClick={loadAllPhotos} children={"Lihat Semua Foto"}/>
+          )}
         </div>
       </div>
 

@@ -39,11 +39,11 @@ const Journal = () => {
   useEffect(() => {
     getDataJournal();
   }, [searchTerm, currentPage]);
-
-  const createJournal = async ({ title, authors, file }) => {
+  console.log("Journal",journals);
+  const createJournal = async ({ title, authors,publisher,published_at, file }) => {
     try {
       const fileUrl = file ? await uploadJournal(file) : null;
-      await addJournal(title, authors, fileUrl); // sekarang sesuai service
+      await addJournal(title, authors,publisher,published_at, fileUrl); // sekarang sesuai service
       Swal.fire("Success", "Journal Berhasil ditambahkan", "success");
       await getDataJournal();
       handleCloseModal();
@@ -52,14 +52,14 @@ const Journal = () => {
     }
   };
 
-  const editJournal = async ({ title, authors, file }) => {
+  const editJournal = async ({ title, authors,publisher,published_at, file }) => {
     try {
       console.log(editingJournal);
       let fileUrl = editingJournal.file_url;
       if (file) {
         fileUrl = await uploadJournal(file);
       }
-      await updateJournal(editingJournal.id, title, authors, fileUrl);
+      await updateJournal(editingJournal.id, title,authors,publisher,published_at, fileUrl);
       await getDataJournal();
       handleCloseModal();
       Swal.fire("success", "Update Data Berhasil", "success");
@@ -116,6 +116,8 @@ const Journal = () => {
             <th className="p-2 border-y bg-blue-100 ">Title</th>
             <th className="p-2 border-y bg-blue-100 ">Authors</th>
             <th className="p-2 border-y bg-blue-100 ">File</th>
+            <th className="p-2 border-y bg-blue-100 ">Publisher</th>
+            <th className="p-2 border-y bg-blue-100 ">Published At</th>
             <th className="p-2 border-y bg-blue-100 ">Created At</th>
             <th className="p-2 border-e border-y bg-blue-100 rounded-e">Actions</th>
           </tr>
@@ -136,6 +138,8 @@ const Journal = () => {
                     "-"
                   )}
                 </td>
+                  <td className="p-2 border-y shadow-md shadow-blue-100">{journal.publisher}</td>
+                  <td className="p-2 border-y shadow-md shadow-blue-100">{journal.published_at}</td>
                 <td className="p-2 border-y shadow-md shadow-blue-100">{new Date(journal.created_at).toLocaleDateString()}</td>
                 <td className="p-2 border-e border-y shadow-md shadow-blue-100 rounded-e space-x-1 space-y-1 text-center">
                   <ActionButton

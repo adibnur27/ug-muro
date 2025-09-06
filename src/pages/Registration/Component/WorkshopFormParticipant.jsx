@@ -9,13 +9,13 @@ const WorkshopFormParticipant = ({ onSubmit, isSubmitting = false }) => {
   const { workshop = [], error, loading } = useWorkshop();
 
   const now = new Date();
-  now.setHours(0, 0, 0, 0);
   const workshops = workshop.filter((ws) => {
     const closeDate = new Date(ws.registration_close);
     const openDate = new Date(ws.registration_open);
     return now <= closeDate && now >= openDate;
   });
   console.log("workshop yang masih bisa mendaftar", workshops);
+  console.log("workshop from context", workshop);
 
   const [form, setForm] = useState({
     name: "",
