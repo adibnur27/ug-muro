@@ -65,10 +65,9 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchResults = async () => {
       try {
-        const { results, total } = await getWorkshopResults(1, 5); // ambil banyak data
-        setResults(results);
-        setTotal(total);
-
+        const { data } = await getWorkshopResults(); // ambil banyak data
+        setResults(data);
+        console.log("data from dashboard", results);
         // hitung status langsung di sini
         const lulus = results.filter((r) => r.status === "lulus").length;
         const tidakLulus = results.filter((r) => r.status === "tidak_lulus").length;
@@ -135,7 +134,7 @@ const Dashboard = () => {
               <h3>Total Result</h3>
               <IconBooks />
             </div>
-            <p className="text-4xl text-center mt-2">{Total}</p>
+            <p className="text-4xl text-center mt-2">{results.length}</p>
           </div>
           <div className=" h-24 p-2 text-sm font-bold shadow rounded border bg-green-300 ">
             <div className="flex justify-between">

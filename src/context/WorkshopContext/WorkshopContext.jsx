@@ -29,7 +29,6 @@ export const WorkshopProvider = ({children}) => {
        fetchWorkshop(); 
     },[])
 
-    console.log(workshop);
 
 
     return (

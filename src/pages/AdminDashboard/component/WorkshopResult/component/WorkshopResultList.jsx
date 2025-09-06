@@ -19,13 +19,13 @@ export default function WorkshopResultList({ results, onEdit, onDelete,currentPa
         {results.map((r,index) => (
           <tr key={r.id}>
             <td className="border-y rounded-s border-l p-2 text-center shadow-blue-50 shadow-lg bg-white">{index + 1 + (currentPage - 1) * itemsPerPage}</td>
-            <td className="border-y p-2 text-center shadow-blue-50 shadow-lg bg-white">{r.participant?.name}</td>
-            <td className="border-y p-2 text-center shadow-blue-50 shadow-lg bg-white">{r.participant?.npm}</td>
-            <td className="border-y p-2 text-center shadow-blue-50 shadow-lg bg-white">{r.participant?.email}</td>
+            <td className="border-y p-2 text-center shadow-blue-50 shadow-lg bg-white">{r.name}</td>
+            <td className="border-y p-2 text-center shadow-blue-50 shadow-lg bg-white">{r.npm}</td>
+            <td className="border-y p-2 text-center shadow-blue-50 shadow-lg bg-white">{r.email}</td>
             <td className="border-y p-2 text-center shadow-blue-50 shadow-lg bg-white">
               {r.status === "lulus" ? <p className="bg-green-400 rounded">{r.status}</p> : <p className="bg-red-400 rounded">{r.status}</p>}
               </td>
-            <td className="border-y p-2 text-center shadow-blue-50 shadow-lg bg-white">{r.participant.workshop.title}</td>
+            <td className="border-y p-2 text-center shadow-blue-50 shadow-lg bg-white">{r.workshop_name}</td>
             <td className="p-2 border-y rounded-e border-r space-x-1 space-y-1 text-center shadow-blue-50 shadow-lg bg-white">
                   <ActionButton
                     hoverShadowColor={"yellow"}
@@ -39,7 +39,7 @@ export default function WorkshopResultList({ results, onEdit, onDelete,currentPa
                     children={
                      <IconTrash className="text-red-600"/>
                     }
-                    onClick={() => onDelete({id:r.id,name:r.participant?.name,workshop:r.participant.workshop.title})}
+                    onClick={() => onDelete({r})}
                   />
                   
                 </td>

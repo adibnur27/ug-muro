@@ -25,7 +25,6 @@ export const getCurrentUser = async() => {
 export const getCurrentSession = async() => {
     const {data, error} = await supabase.auth.getSession();
     if(error) throw new Error ("gagal mendapatkan sesi pengguna");
-    console.log(data);
     return data?.session || null;
 }
 

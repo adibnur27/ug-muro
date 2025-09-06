@@ -1,61 +1,18 @@
 import { supabase } from "../lib/supabaseClient";
 
 // Update function getWorkshopResults di workshopResultService.js
-export async function getWorkshopResults(page, limit) {
+export async function getWorkshopResults() {
   try {
-    const from = (page - 1) * limit;
-    const to = from + limit - 1;
-
-    const { data, error, count } = await supabase
+    const { data, error} = await supabase
       .from("workshop_results")
-      .select(
-        `
-        id,
-        status,
-        created_at,
-        participants (
-          id,
-          name,
-          npm,
-          email,
-          workshop_id,
-          workshop (
-            id,
-            title,
-            description,
-            start_date,
-            registration_close,  
-            registration_open
-          )
-        )
-      `,
-        { count: "exact" }
+      .select("*"
       )
-      .order("created_at", { ascending: false })
-      .range(from, to);
 
     if (error) throw error;
 
-    const transformedData = data.map((result) => ({
-      id: result.id,
-      status: result.status,
-      created_at: result.created_at,
-      participant: result.participants
-        ? {
-            id: result.participants.id,
-            name: result.participants.name,
-            npm: result.participants.npm,
-            email: result.participants.email,
-            workshop_id: result.participants.workshop_id,
-            workshop: result.participants.workshop,
-          }
-        : null,
-    }));
+   
 
-    return {
-      results: transformedData,
-      total: count,
-    };
+    return {data};
   } catch (err) {
     console.error("Error fetching workshop results:", err.message);
     throw err;
@@ -79,21 +36,23 @@ export async function uploadWorkshopResultsFromExcel(rows) {
     throw new Error(`Database error: ${error.message}`);
   }
 
-  console.log("Successfully inserted:", data?.length || 0, "records");
   return data;
 }
 
 // GUNAKAN INI hanya untuk create individual record (bukan dari Excel)
 export async function createWorkshopResult(rowData) {
-  console.log("Creating single workshop result:", rowData);
+  const {name, npm, email, status, workshop } =  rowData;
 
   try {
     const dataToInsert = {
-      participant_id: rowData.participant_id,
-      status: rowData.status,
+      name,
+      npm,
+      email,
+      status,
+      workshop_name: workshop,
     };
 
-    const { data, error } = await supabase.from("workshop_results").insert([dataToInsert]).select();
+    const { data, error } = await supabase.from("workshop_results").insert([dataToInsert]);
 
     if (error) throw error;
 
@@ -112,8 +71,11 @@ export async function updateWorkshopResult(id, rowData) {
 
   try {
     const dataToUpdate = {
-      participant_id: rowData.participant_id,
+      name: rowData.name,
+      npm: rowData.npm,
+      email: rowData.email,
       status: rowData.status,
+      workshop_name: rowData.workshop, // konsisten sama create
     };
 
     const { data, error } = await supabase
@@ -130,6 +92,7 @@ export async function updateWorkshopResult(id, rowData) {
     throw err;
   }
 }
+
 
 export const deleteWorkshopResult = async(id) => {
   const {data, error} = await supabase

@@ -27,19 +27,15 @@ export default function WorkshopResult() {
   const [selectedStatus, setSelectedStatus] = useState("");
   const [searchQuery, setSearchQuery] = useState(""); // ✅ state pencarian
 
+  const getDataWorkshopResults = async () => {
+    const {data} = await getWorkshopResults();
+    setResults(data);
+  }
+
   // Ambil data hasil workshop
   useEffect(() => {
-    const fetchResults = async () => {
-      try {
-        const { results, total } = await getWorkshopResults(page, limit);
-        setResults(results);
-        setTotal(total);
-      } catch (err) {
-        console.error("Error fetching results:", err.message);
-      }
-    };
-    fetchResults();
-  }, [page, reload]);
+    getDataWorkshopResults();
+  }, []);
 
   // Ambil daftar kategori workshop
   useEffect(() => {
@@ -57,30 +53,30 @@ export default function WorkshopResult() {
   }, []);
 
   // Terapkan filter di client-side (workshop, status, dan search)
-  useEffect(() => {
-    let filtered = [...results];
+  // useEffect(() => {
+    // let filtered = [...results];
 
-    if (selectedWorkshop) {
-      filtered = filtered.filter((result) => result.participant?.workshop_id === selectedWorkshop);
-    }
+  //   if (selectedWorkshop) {
+  //     filtered = filtered.filter((result) => result.participant?.workshop_id === selectedWorkshop);
+  //   }
 
-    if (selectedStatus) {
-      filtered = filtered.filter((result) => result.status === selectedStatus);
-    }
+  //   if (selectedStatus) {
+  //     filtered = filtered.filter((result) => result.status === selectedStatus);
+  //   }
 
-    if (searchQuery) {
-      const lowerSearch = searchQuery.toLowerCase();
-      filtered = filtered.filter(
-        (result) =>
-          result.participant?.name?.toLowerCase().includes(lowerSearch) ||
-          result.participant?.npm?.toLowerCase().includes(lowerSearch) ||
-          result.participant?.email?.toLowerCase().includes(lowerSearch) ||
-          result.participant?.workshop?.title?.toLowerCase().includes(lowerSearch)
-      );
-    }
+  //   if (searchQuery) {
+  //     const lowerSearch = searchQuery.toLowerCase();
+  //     filtered = filtered.filter(
+  //       (result) =>
+  //         result.participant?.name?.toLowerCase().includes(lowerSearch) ||
+  //         result.participant?.npm?.toLowerCase().includes(lowerSearch) ||
+  //         result.participant?.email?.toLowerCase().includes(lowerSearch) ||
+  //         result.participant?.workshop?.title?.toLowerCase().includes(lowerSearch)
+  //     );
+  //   }
 
-    setFilteredResults(filtered);
-  }, [results, selectedWorkshop, selectedStatus, searchQuery]);
+  //   setFilteredResults(filtered);
+  // }, [results, selectedWorkshop, selectedStatus, searchQuery]);
 
   const totalPages = Math.ceil(total / limit);
 
@@ -98,11 +94,12 @@ export default function WorkshopResult() {
     setShowForm(true);
   };
 
-  const handleDelete = async (data) => {
+  const handleDelete = async ({r: data}) => {
+    console.log(data);
     const confirmDelete = await Swal.fire({
       title: "Yakin hapus?",
       html: `<p>nama: <strong>${data?.name || "N/A"}</strong></p>
-             <p>workshop: <strong>${data?.workshop || "N/A"}</strong></p>
+             <p>workshop: <strong>${data?.workshop_name || "N/A"}</strong></p>
              Data akan dihapus permanen.`,
       icon: "warning",
       showCancelButton: true,
@@ -114,7 +111,7 @@ export default function WorkshopResult() {
       try {
         await deleteWorkshopResult(data.id);
         await Swal.fire("Berhasil!", "Workshop Result berhasil dihapus", "success");
-        setReload(!reload);
+        getDataWorkshopResults();
       } catch (err) {
         Swal.fire("Gagal", err.message, "error");
       }
@@ -151,7 +148,7 @@ export default function WorkshopResult() {
       {/* Upload Excel */}
 
       {/* Filter Section */}
-      <WorkshopResultFilter
+      {/* <WorkshopResultFilter
         categories={categories}
         selectedWorkshop={selectedWorkshop}
         selectedStatus={selectedStatus}
@@ -160,23 +157,23 @@ export default function WorkshopResult() {
         onClearFilters={clearFilters}
         resultsLength={results.length}
         filteredLength={filteredResults.length}
-      />
+      /> */}
 
       {/* List */}
-      <WorkshopResultList results={filteredResults} onEdit={handleEdit} onDelete={handleDelete} currentPage={page} itemsPerPage={limit} />
+      <WorkshopResultList results={results} onEdit={handleEdit} onDelete={handleDelete} currentPage={page} itemsPerPage={limit} />
 
       {/* Pagination */}
-      {total > limit && (
+      {/* {total > limit && (
         <div className="mt-4 flex justify-between items-center px-2">
           <div className="text-gray-400 text-sm">
             Page {page} of {totalPages} pages
           </div>
           <Pagination currentPage={page} totalPages={totalPages} onPageChange={(newPage) => setPage(newPage)} />
         </div>
-      )}
+      )} */}
 
       {/* Form Edit/Add */}
-      {showForm && <WorkshopResultForm result={selectedResult} onClose={handleFormClose} />}
+      {showForm && <WorkshopResultForm initialData={selectedResult} onClose={handleFormClose} />}
     </div>
   );
 }

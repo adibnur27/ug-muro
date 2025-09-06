@@ -11,7 +11,6 @@ const ActionButton = ({ children, onClick,hoverShadowColor }) => {
   };
 
   const hoverShadowClass = hoverShadowColor ? shadowClassMap[hoverShadowColor] || '' : '';
-  console.log(hoverShadowClass);
   return (
     <div className="relative inline-block group">
       <button
