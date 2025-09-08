@@ -1,73 +1,63 @@
+// utils/excelUtils.js
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import { supabase } from "../lib/supabaseClient";
+import Swal from "sweetalert2";
 
-export const downloadWorkshopTemplate = async (workshopId) => {
-  const { data, error } = await supabase
-    .from("participants")
-    .select(`
-      id,
-      name,
-      npm,
-      email,
-      workshop:workshop_id ( title )
-    `)
-    .eq("workshop_id", workshopId);
-
-  if (error) {
-    console.error(error);
-    alert("Gagal mengambil data peserta");
+/**
+ * Download template workshop_results berdasarkan nama workshop yang dipilih
+ * @param {string} workshopName
+ */
+export const downloadWorkshopTemplate = async (workshop) => {
+  
+  if (!workshop) {
+    Swal.fire("warning","Pilih workshop terlebih dahulu!","warning");
     return;
   }
-  console.log("from excelutils",data[0].workshop.title);
 
-  const headers = ["participant_id", "name", "npm", "email", "workshop_title", "status"];
-  const rows = data.map((p) => [
-    p.id,
-    p.name,
-    p.npm,
-    p.email,
-    p.workshop?.title || "",
-    ""
-  ]);
+  const {title, start_date, end_date} = workshop;
 
-  const worksheet = XLSX.utils.aoa_to_sheet([headers, ...rows]);
+  // Header sesuai tabel workshop_results
+  const headers = [
+    "name",
+    "npm",
+    "email",
+    "status",
+    "start_date",
+    "end_date",
+    "workshop_name"
+  ];
+
+  // Isi pertama, workshop_name langsung diisi biar admin tidak typo
+  const firstRow = ["", "", "", "", start_date, end_date, title];
+
+  // Buat worksheet
+  const worksheet = XLSX.utils.aoa_to_sheet([headers, firstRow]);
   const workbook = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(workbook, worksheet, "Template");
 
+  // Export Excel
   const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
   const blob = new Blob([excelBuffer], { type: "application/octet-stream" });
-  saveAs(blob, `workshop_template_${data[0].workshop.title}_${workshopId}.xlsx`);
+
+  saveAs(blob, `workshop_template_${workshop.title}_${workshop.start_date}_${workshop.end_date}.xlsx`);
 };
 
-/**
- * Parse file Excel workshop_results dan pastikan semua participant_id valid UUID.
- * @param {File} file - File Excel (.xlsx) yang diupload
- * @returns {Promise<Array<Object>>} - Data hasil parsing siap diinsert ke Supabase
- */
 
- // pastikan ini sesuai dengan lokasi file validasi UUID
-
+// utils/excelUtils.js
 export function parseWorkshopResultFile(fileBuffer) {
   const workbook = XLSX.read(fileBuffer, { type: "buffer" });
   const sheetName = workbook.SheetNames[0];
   const sheet = workbook.Sheets[sheetName];
   const rows = XLSX.utils.sheet_to_json(sheet);
 
-  const results = [];
-
-  rows.forEach((row) => {
-    console.log("fromPharse" ,row);
-    const idStr = String(row.participant_id || "").trim();
-
-    // Validasi UUID saja
-    
-
-    results.push({
-      participant_id: idStr,
-      status: row.status || "",
-    });
-  });
-
-  return results;
+  return rows.map((row) => ({
+    name: row.name || "",
+    npm: row.npm || "",
+    email: row.email || "",
+    workshop_name: row.workshop_name || "",
+    status: row.status || "",
+    start_date: row.start_date || null,
+    end_date: row.end_date || null,
+  }));
 }

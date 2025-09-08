@@ -12,6 +12,8 @@ export default function WorkshopResultList({ results, onEdit, onDelete,currentPa
           <th className="border-y bg-blue-100 p-2 ">Email</th>
           <th className="border-y bg-blue-100 p-2 ">Status</th>
           <th className="border-y bg-blue-100 p-2 ">Workshop</th>
+          <th className="border-y bg-blue-100 p-2 ">Start Date</th>
+          <th className="border-y bg-blue-100 p-2 ">End Date</th>
           <th className="border-y bg-blue-100 rounded-e p-2 ">Aksi</th>
         </tr>
       </thead>
@@ -26,6 +28,8 @@ export default function WorkshopResultList({ results, onEdit, onDelete,currentPa
               {r.status === "lulus" ? <p className="bg-green-400 rounded">{r.status}</p> : <p className="bg-red-400 rounded">{r.status}</p>}
               </td>
             <td className="border-y p-2 text-center shadow-blue-50 shadow-lg bg-white">{r.workshop_name}</td>
+            <td className="border-y p-2 text-center shadow-blue-50 shadow-lg bg-white">{r.start_date}</td>
+            <td className="border-y p-2 text-center shadow-blue-50 shadow-lg bg-white">{r.end_date}</td>
             <td className="p-2 border-y rounded-e border-r space-x-1 space-y-1 text-center shadow-blue-50 shadow-lg bg-white">
                   <ActionButton
                     hoverShadowColor={"yellow"}

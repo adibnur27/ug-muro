@@ -1,35 +1,65 @@
 import { supabase } from "../lib/supabaseClient";
 
-// Update function getWorkshopResults di workshopResultService.js
-export async function getWorkshopResults() {
+// get workshop result with searching adn pagination
+export async function getWorkshopResults(query = "", page = 1, limit = 10, workshopId = "", status = "") {
   try {
-    const { data, error} = await supabase
+    const from = (page - 1) * limit;
+    const to = from + limit - 1;
+
+    let supabaseQuery = supabase
       .from("workshop_results")
-      .select("*"
-      )
+      .select("*", { count: "exact" })
+      .range(from, to);
+
+    // 🔎 Search
+    if (query) {
+      supabaseQuery = supabaseQuery.or(
+        `name.ilike.%${query}%,npm.ilike.%${query}%,email.ilike.%${query}%,workshop_name.ilike.%${query}%`
+      );
+    }
+
+    // 🎯 Filter by Workshop
+    if (workshopId) {
+      supabaseQuery = supabaseQuery.eq("workshop_name", workshopId);
+    }
+
+    // 🎯 Filter by Status
+    if (status) {
+      supabaseQuery = supabaseQuery.eq("status", status);
+    }
+
+    const { data, error, count } = await supabaseQuery;
 
     if (error) throw error;
 
-   
-
-    return {data};
+    return { data, count };
   } catch (err) {
     console.error("Error fetching workshop results:", err.message);
     throw err;
   }
 }
 
+
+
 // GUNAKAN INI untuk batch upload dari Excel
+// service/workshopResultService.js
 export async function uploadWorkshopResultsFromExcel(rows) {
   console.log("Batch uploading workshop results:", rows);
-  
-  // Format data sesuai skema database
+
   const formatted = rows.map((row) => ({
-    participant_id: row.participant_id,
+    name: row.name,
+    npm: row.npm,
+    email: row.email,
+    workshop_name: row.workshop_name,
     status: row.status,
+    start_date: row.start_date,
+    end_date: row.end_date,
   }));
 
-  const { data, error } = await supabase.from("workshop_results").insert(formatted).select();
+  const { data, error } = await supabase
+    .from("workshop_results")
+    .insert(formatted)
+    .select();
 
   if (error) {
     console.error("Error batch inserting workshop results:", error);
@@ -41,7 +71,7 @@ export async function uploadWorkshopResultsFromExcel(rows) {
 
 // GUNAKAN INI hanya untuk create individual record (bukan dari Excel)
 export async function createWorkshopResult(rowData) {
-  const {name, npm, email, status, workshop } =  rowData;
+  const {name, npm, email, status, workshop, start_date, end_date } =  rowData;
 
   try {
     const dataToInsert = {
@@ -50,6 +80,8 @@ export async function createWorkshopResult(rowData) {
       email,
       status,
       workshop_name: workshop,
+      start_date,
+      end_date,
     };
 
     const { data, error } = await supabase.from("workshop_results").insert([dataToInsert]);
@@ -75,7 +107,9 @@ export async function updateWorkshopResult(id, rowData) {
       npm: rowData.npm,
       email: rowData.email,
       status: rowData.status,
-      workshop_name: rowData.workshop, // konsisten sama create
+      workshop_name: rowData.workshop,
+      start_date : rowData.start_date, // konsisten sama create
+      end_date : rowData.end_date, // konsisten sama create
     };
 
     const { data, error } = await supabase

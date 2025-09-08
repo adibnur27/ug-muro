@@ -11,7 +11,7 @@ export default function WorkshopResultFilter({
   filteredLength,
 }) {
   return (
-    <div className="bg-white px-4 rounded-lg">
+    <div className="bg-white  rounded-lg">
       {/* <h3 className="text-lg font-semibold mb-3 text-gray-800">Filter Data</h3> */}
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -26,9 +26,9 @@ export default function WorkshopResultFilter({
             className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           >
             <option value="">Semua Workshop</option>
-            {categories.map((workshop) => (
-              <option key={workshop.id} value={workshop.id}>
-                {workshop.title}
+            {categories.map((categorie) => (
+              <option key={categorie.id} value={categorie.workshop_name}>
+                {categorie.workshop_name}
               </option>
             ))}
           </select>

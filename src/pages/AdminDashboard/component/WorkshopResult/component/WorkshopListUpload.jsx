@@ -1,40 +1,23 @@
-import React, { useState, useEffect } from "react";
-import { supabase } from "../../../../../lib/supabaseClient";
+import React, { useState } from "react";
 import { downloadWorkshopTemplate, parseWorkshopResultFile } from "../../../../../utils/excelUtils";
 import { uploadWorkshopResultsFromExcel } from "../../../../../service/workshopResultService";
+import Swal from "sweetalert2";
 
-export default function WorkshopListUpload({ onUploadSuccess }) {
+export default function WorkshopListUpload({ onUploadSuccess, workshops }) {
   const [loading, setLoading] = useState(false);
-  const [workshops, setWorkshops] = useState([]);
-  const [selectedWorkshop, setSelectedWorkshop] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedWorkshopId, setSelectedWorkshopId] = useState("");
+  const [selectedWorkshop, setSelectedWorkshop] = useState(null);
 
-  useEffect(() => {
-    const fetchWorkshops = async () => {
-      const { data, error } = await supabase.from("workshop").select("id, title");
-      if (error) {
-        console.error("Gagal memuat workshop:", error);
-        return;
-      }
-      setWorkshops(data || []);
-    };
-    fetchWorkshops();
-  }, []);
+  console.log("workshop choice",selectedWorkshop);
+  console.log(workshops);
 
   const handleFileChange = (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Validasi format file
     if (!/\.(xlsx|xls)$/i.test(file.name)) {
       alert("Format file harus .xlsx atau .xls");
-      e.target.value = "";
-      return;
-    }
-
-    // Validasi size file (opsional, misalnya max 5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      alert("Ukuran file maksimal 5MB");
       e.target.value = "";
       return;
     }
@@ -42,89 +25,66 @@ export default function WorkshopListUpload({ onUploadSuccess }) {
     setSelectedFile(file);
   };
 
-  const handleDownload = async () => {
-    if (!selectedWorkshop) {
-      alert("Pilih workshop terlebih dahulu");
-      return;
-    }
-    await downloadWorkshopTemplate(selectedWorkshop);
-  };
-
   const handleSubmit = async () => {
     if (!selectedFile) {
-      alert("Pilih file Excel terlebih dahulu");
+      Swal.fire("warning","Pilih file Excel terlebih dahulu","warning");
       return;
     }
 
     setLoading(true);
     try {
-      // Pastikan file masih bisa diakses
       const fileBuffer = await selectedFile.arrayBuffer();
       const rows = await parseWorkshopResultFile(fileBuffer);
-      console.log("data saat submit:", JSON.stringify(rows, null, 2));
 
-      if (!rows || !Array.isArray(rows) || rows.length === 0) {
+      if (!rows || rows.length === 0) {
         throw new Error("File kosong atau format tidak sesuai");
       }
 
-      // Filter data yang valid
-      const validRows = rows.filter((row) => row.participant_id && row.status);
-
-      if (validRows.length === 0) {
-        throw new Error("Tidak ada data valid yang ditemukan");
-      }
-
-      // Gunakan batch upload instead of loop
-      await uploadWorkshopResultsFromExcel(validRows);
-
+      await uploadWorkshopResultsFromExcel(rows);
       if (onUploadSuccess) onUploadSuccess();
-      alert(`Data berhasil diunggah: ${validRows.length} record`);
+
+      alert(`Data berhasil diunggah: ${rows.length} record`);
     } catch (err) {
       console.error("Error parsing Excel file:", err);
-      if (err.name === "NotReadableError") {
-        alert("File tidak bisa dibaca. Pastikan file sudah ditutup dari Excel sebelum upload.");
-      } else {
-        alert(`Gagal membaca file Excel: ${err.message}`);
-      }
+      alert(`Gagal membaca file Excel: ${err.message}`);
     } finally {
       setLoading(false);
       setSelectedFile(null);
-      const fileInput = document.querySelector('input[type="file"]');
-      if (fileInput) fileInput.value = "";
     }
   };
 
   return (
     <div className="flex justify-end rounded bg-white w-[1/2] space-x-2 box-border">
-      
-
       {/* Upload File */}
-      <div className="bg-blue-200 p-2 box-border w-[45%] rounded">
+      <div className="bg-blue-200 p-2 w-[45%] rounded">
         <h2 className="text-sm font-semibold mb-2 text-center">Upload Data Workshop</h2>
-        <div className="mb-2">
-          <input type="file" accept=".xlsx, .xls" onChange={handleFileChange} className="border p-1 rounded w-full" />
-        </div>
-
-        {/* Tombol Submit */}
-        <button onClick={handleSubmit} className=" px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 w-full" disabled={loading}>
+        <input type="file" accept=".xlsx, .xls" onChange={handleFileChange} className="border p-1 rounded w-full mb-2" />
+        <button onClick={handleSubmit} className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 w-full" disabled={loading}>
           {loading ? "Memproses..." : "Submit"}
         </button>
       </div>
-      <div className="bg-green-200 p-2 box-border w-[45%] rounded">
-        <h2 className="text-sm font-semibold mb-2 text-center ">Download Data Workshop</h2>
 
-        {/* Pilih Workshop */}
-        <select value={selectedWorkshop} onChange={(e) => setSelectedWorkshop(e.target.value)} className="border p-2 rounded mb-2 w-full">
+      {/* Download Template */}
+      <div className="bg-green-200 p-2 w-[45%] rounded">
+        <h2 className="text-sm font-semibold mb-2 text-center">Download Data Workshop</h2>
+        <select
+          value={selectedWorkshopId}
+          onChange={(e) => {
+            const id = e.target.value;
+            setSelectedWorkshopId(id);
+            const workshop = workshops.find((w) => w.id === id);
+            setSelectedWorkshop(workshop);
+          }}
+          className="border p-1 rounded w-full mb-2"
+        >
           <option value="">-- Pilih Workshop --</option>
-          {workshops.map((ws) => (
-            <option key={ws.id} value={ws.id}>
-              {ws.title}
+          {workshops.map((w) => (
+            <option key={w.id} value={w.id}>
+              {w.title} ({w.start_date} - {w.end_date})
             </option>
           ))}
         </select>
-
-        {/* Tombol Download */}
-        <button onClick={handleDownload} className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 w-full">
+        <button onClick={() => downloadWorkshopTemplate(selectedWorkshop)} className="px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 w-full">
           Download Template
         </button>
       </div>

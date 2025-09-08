@@ -8,43 +8,66 @@ import Swal from "sweetalert2";
 import WorkshopResultFilter from "./component/WorkshopResultFilter";
 import Pagination from "../../../../component/Pagination/Pagination";
 import SearchBar from "../../../../component/SearchBar/SearchBar"; // ✅ sesuaikan path
+import DeleteByWorkshop from "./component/DeleteByWorkshop";
+import { useWorkshop } from "../../../../context/WorkshopContext/WorkshopContext";
 
 export default function WorkshopResult() {
   const [results, setResults] = useState([]);
-  const [filteredResults, setFilteredResults] = useState([]);
   const [selectedResult, setSelectedResult] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [reload, setReload] = useState(false);
+
+  // workshop from context
+  const {workshop} = useWorkshop()
 
   // Pagination States
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const limit = 10;
+  const totalPages = Math.ceil(total / limit);
 
   // Filter states
   const [categories, setCategories] = useState([]);
   const [selectedWorkshop, setSelectedWorkshop] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("");
   const [searchQuery, setSearchQuery] = useState(""); // ✅ state pencarian
+  console.log(searchQuery);
 
-  const getDataWorkshopResults = async () => {
-    const {data} = await getWorkshopResults();
-    setResults(data);
-  }
+
+  const getDataWorkshopResults = async (query = "", currentPage = page) => {
+    try {
+      const { data, count } = await getWorkshopResults(
+        query,
+        currentPage,
+        limit,
+        selectedWorkshop, // ✅ kirim workshopId
+        selectedStatus // ✅ kirim status
+      );
+      setResults(data);
+      setTotal(count);
+    } catch (error) {
+      Swal.fire("error", `Data gagal diambil ${error}`, "error");
+    }
+  };
 
   // Ambil data hasil workshop
   useEffect(() => {
-    getDataWorkshopResults();
-  }, []);
+    getDataWorkshopResults(searchQuery, page);
+  }, [searchQuery, page, selectedWorkshop, selectedStatus]);
 
   // Ambil daftar kategori workshop
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const { data: workshops, error: workshopError } = await supabase.from("workshop").select("id, title").order("title");
+        const { data, error } = await supabase.from("workshop_results").select("workshop_name");
 
-        if (workshopError) throw workshopError;
-        setCategories(workshops || []);
+        if (error) throw error;
+
+        // ambil hanya nama unik
+        const uniqueWorkshops = [...new Set(data.map((d) => d.workshop_name))];
+
+        // set dalam format yang cocok untuk select
+        setCategories(uniqueWorkshops.map((name, idx) => ({ id: idx, workshop_name: name })));
       } catch (err) {
         console.error("Error fetching workshops:", err);
       }
@@ -52,37 +75,15 @@ export default function WorkshopResult() {
     fetchCategories();
   }, []);
 
-  // Terapkan filter di client-side (workshop, status, dan search)
-  // useEffect(() => {
-    // let filtered = [...results];
-
-  //   if (selectedWorkshop) {
-  //     filtered = filtered.filter((result) => result.participant?.workshop_id === selectedWorkshop);
-  //   }
-
-  //   if (selectedStatus) {
-  //     filtered = filtered.filter((result) => result.status === selectedStatus);
-  //   }
-
-  //   if (searchQuery) {
-  //     const lowerSearch = searchQuery.toLowerCase();
-  //     filtered = filtered.filter(
-  //       (result) =>
-  //         result.participant?.name?.toLowerCase().includes(lowerSearch) ||
-  //         result.participant?.npm?.toLowerCase().includes(lowerSearch) ||
-  //         result.participant?.email?.toLowerCase().includes(lowerSearch) ||
-  //         result.participant?.workshop?.title?.toLowerCase().includes(lowerSearch)
-  //     );
-  //   }
-
-  //   setFilteredResults(filtered);
-  // }, [results, selectedWorkshop, selectedStatus, searchQuery]);
-
-  const totalPages = Math.ceil(total / limit);
-
   // Event handlers
-  const handleWorkshopChange = (e) => setSelectedWorkshop(e.target.value);
-  const handleStatusChange = (e) => setSelectedStatus(e.target.value);
+  const handleWorkshopChange = (e) => {
+    setSelectedWorkshop(e.target.value);
+    setPage(1);
+  };
+  const handleStatusChange = (e) => {
+    setSelectedStatus(e.target.value);
+    setPage(1);
+  };
   const clearFilters = () => {
     setSelectedWorkshop("");
     setSelectedStatus("");
@@ -94,7 +95,7 @@ export default function WorkshopResult() {
     setShowForm(true);
   };
 
-  const handleDelete = async ({r: data}) => {
+  const handleDelete = async ({ r: data }) => {
     console.log(data);
     const confirmDelete = await Swal.fire({
       title: "Yakin hapus?",
@@ -121,10 +122,11 @@ export default function WorkshopResult() {
   const handleFormClose = () => {
     setSelectedResult(null);
     setShowForm(false);
-    setReload(!reload);
+    getDataWorkshopResults(searchQuery, page);
   };
 
   const handleUploadSuccess = () => setReload(!reload);
+
   const handleAddNew = () => {
     setSelectedResult(null);
     setShowForm(true);
@@ -140,15 +142,17 @@ export default function WorkshopResult() {
         <div className="flex space-x-2 h-9">
           <SearchBar placeholder="Cari nama, NPM, email, atau workshop..." onSearch={(q) => setSearchQuery(q)} />
           <button onClick={handleAddNew} className="bg-blue-600 hover:bg-blue-700 text-white px-1 py-2 rounded">
-          Add Result
+            Add Result
           </button>
         </div>
-        <WorkshopResultUpload onUploadSuccess={handleUploadSuccess} />
+        {/* Upload Excel */}
+        <WorkshopResultUpload onUploadSuccess={handleUploadSuccess} workshops={workshop}/>
+
+        <DeleteByWorkshop categories={categories} onDeleted={() => getDataWorkshopResults(searchQuery, page)} />
       </div>
-      {/* Upload Excel */}
 
       {/* Filter Section */}
-      {/* <WorkshopResultFilter
+      <WorkshopResultFilter
         categories={categories}
         selectedWorkshop={selectedWorkshop}
         selectedStatus={selectedStatus}
@@ -156,21 +160,21 @@ export default function WorkshopResult() {
         onStatusChange={handleStatusChange}
         onClearFilters={clearFilters}
         resultsLength={results.length}
-        filteredLength={filteredResults.length}
-      /> */}
+        filteredLength={total} // ganti: total hasil dari DB
+      />
 
       {/* List */}
       <WorkshopResultList results={results} onEdit={handleEdit} onDelete={handleDelete} currentPage={page} itemsPerPage={limit} />
 
       {/* Pagination */}
-      {/* {total > limit && (
+      {total > limit && (
         <div className="mt-4 flex justify-between items-center px-2">
           <div className="text-gray-400 text-sm">
             Page {page} of {totalPages} pages
           </div>
           <Pagination currentPage={page} totalPages={totalPages} onPageChange={(newPage) => setPage(newPage)} />
         </div>
-      )} */}
+      )}
 
       {/* Form Edit/Add */}
       {showForm && <WorkshopResultForm initialData={selectedResult} onClose={handleFormClose} />}
