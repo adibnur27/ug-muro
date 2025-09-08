@@ -39,6 +39,17 @@ export async function getWorkshopResults(query = "", page = 1, limit = 10, works
   }
 }
 
+//  service untuk download workshop result di user
+export async function getWorkshopResultsByName(workshop) {
+  const { data, error } = await supabase
+    .from("workshop_results")
+    .select("*")
+    .eq("workshop_name", workshop.workshop_name);
+
+  if (error) throw error;
+  return data;
+}
+
 
 
 // GUNAKAN INI untuk batch upload dari Excel

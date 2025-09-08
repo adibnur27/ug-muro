@@ -17,7 +17,6 @@ import ScrollToTop from "../component/ScrollToTop/ScrollToTop";
 import AdminLogin from "../pages/AdminLogin/AdminLogin";
 import AdminDashboard from "../pages/AdminDashboard/AdminDashboard";
 import Dashboard from "../pages/AdminDashboard/component/Dashboard/Dashboard";
-import Participants from "../pages/AdminDashboard/component/Participants/Participants";
 import Workshop from "../pages/AdminDashboard/component/Workshop/Workshop";
 import Journal from "../pages/AdminDashboard/component/Journals/Journal";
 import Albums from "../pages/AdminDashboard/component/Albums/Albums";
@@ -39,7 +38,6 @@ const routes = () => {
         <Route path="/adminLogin" element={<AdminLogin/>}/>
         <Route path="/admin" element={<AdminDashboard />}>
           <Route index element={<Dashboard/>} />
-          <Route path="participants" element={<Participants />} />
           <Route path="workshop" element={<Workshop />} />
           <Route path="journal" element={<Journal />} />
           <Route path="albums" element={<Albums />} />

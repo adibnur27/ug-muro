@@ -61,3 +61,19 @@ export function parseWorkshopResultFile(fileBuffer) {
     end_date: row.end_date || null,
   }));
 }
+
+
+
+export async function downloadWorkshopResultByName(workshop, rows) {
+  if (!rows || rows.length === 0) {
+    alert(`Tidak ada data untuk workshop: ${workshop.workshop_name}`);
+    return;
+  }
+
+  const worksheet = XLSX.utils.json_to_sheet(rows);
+
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, "Results");
+
+  XLSX.writeFile(workbook, `${workshop.workshop_name}${workshop.start_date}_${workshop.end_date}_results.xlsx`);
+}

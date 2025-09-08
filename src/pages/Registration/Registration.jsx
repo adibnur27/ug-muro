@@ -1,34 +1,15 @@
 import React, { useState, useCallback } from "react";
 import Navbar from "../../component/Navbar/Navbar";
 import Footer from "../../component/Footer/Footer";
-import Threads from "./ui/Threads";
-import WorkshopFormParticipant from "./Component/WorkshopFormParticipant";
-import Swal from "sweetalert2";
-import { addParticipant } from "../../service/participantsService";
+
 import { useWorkshop } from "../../context/WorkshopContext/WorkshopContext";
+
 import ButtonActivity from "../../component/Button/ButtonActivity";
 import WhatsAppButton from "../../component/Button/WhatsAppButton";
 
 const Registration = () => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const { workshop } = useWorkshop();
-  // Memoize handleSubmit untuk mencegah re-render berlebihan
-  const handleSubmit = useCallback(async (formData) => {
-    if (isSubmitting) return; // Prevent double submission
-    
-    setIsSubmitting(true);
-    
-    try {
-      await addParticipant(formData);
-      // Success message akan ditangani di component form
-    } catch (error) {
-      console.error("Registration error:", error);
-      // Error akan di-throw kembali ke form untuk ditangani
-      throw error;
-    } finally {
-      setIsSubmitting(false);
-    }
-  }, [isSubmitting]);
+
+  const {workshop} = useWorkshop();
 
   return (
     <div className="bg-deepBlend min-h-screen overflow-hidden">

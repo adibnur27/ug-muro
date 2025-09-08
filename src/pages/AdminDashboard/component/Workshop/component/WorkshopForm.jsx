@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { LoaderOne } from "../../../../../component/ui/loader"; // pastikan path sesuai
 import UploadImage from "../../../../../component/UploadImage/UploadImage";
 import UploadFile from "../../../../../component/UploadFile/UploadFile";
+import Swal from "sweetalert2";
 
 const WorkshopForm = ({ initialData = {}, onSubmit, mode = "add", isSubmitting }) => {
   const [form, setForm] = useState({
@@ -51,6 +52,7 @@ const WorkshopForm = ({ initialData = {}, onSubmit, mode = "add", isSubmitting }
           end_date: "",
         });
       }
+    
     } catch (error) {
       alert(`Gagal ${mode === "add" ? "menambahkan" : "mengupdate"} workshop: ${error.message}`);
     }

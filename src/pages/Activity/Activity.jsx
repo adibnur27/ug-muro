@@ -7,6 +7,7 @@ import ButtonActivity from "../../component/Button/ButtonActivity";
 import Modal from "../../component/Modal/Modal";
 import { useNavigate } from "react-router-dom";
 import WhatsAppButton from "../../component/Button/WhatsAppButton";
+import WorkshopResultDownloadList from "./component/WorkshopResultDownloadList";
 
 const Activity = () => {
   // modal state
@@ -122,24 +123,7 @@ const Activity = () => {
 
       <section className="bg-deepBlend py-16 px-6 md:px-20">
         <h2 className="text-3xl font-bold font-orbitron text-center mb-10">Workshop Result</h2>
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {workshop.map((ws,) => (
-            <div key={ws.id} className="bg-gray-100 shadow-lg rounded-xl overflow-hidden hover:shadow-xl transition hover:scale-105">
-              <img src={ws.image_url} alt={ws.title} className="h-48 w-full object-cover" />
-              <div className="p-5 space-y-2">
-               
-                <h3 className="text-xl font-semibold text-black">{ws.title}</h3>
-                <p className="text-gray-600 text-sm line-clamp-1">{ws.description}</p>
-                <ButtonActivity
-                  children={"Selengkapnya"}
-                  onClick={() => {
-                    handleDetailClick(ws);
-                  }}
-                />
-              </div>
-            </div>
-          ))}
-        </div>
+        <WorkshopResultDownloadList/>
       </section>
 
       {/* help and complaint center */}

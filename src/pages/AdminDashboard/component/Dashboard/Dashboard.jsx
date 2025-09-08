@@ -10,32 +10,29 @@ import { getAllPhotos } from "../../../../service/galleryService";
 
 const Dashboard = () => {
   const [results, setResults] = useState([]);
-  const [Total, setTotal] = useState([]);
+  const [workshopResultByworkshop, setWorkshopResultByworkshop] = useState([]);
   const [TotalLulus, setTotalLulus] = useState([]);
   const [TotalTidakLulus, setTotalTidakLulus] = useState([]);
 
-  const [upcoming, setUpcoming] = useState([]);
   const [ongoing, setOngoing] = useState([]);
   const [completed, setCompleted] = useState([]);
 
   // journal State
-  const [totalJournalItems,setTotalJournalItems] = useState([])
   const [Journals,setJournals] = useState([])
 
   // Gallery State
   const [photos,setPhotos] = useState([])
 
   const { workshop } = useWorkshop();
-  console.log("Data Workshop From Dashboard", workshop);
+  console.log("data from dashboard", results);
 
   const categorizeWorkshops = (workshops) => {
     const today = new Date();
 
-    const upcoming = workshops.filter((ws) => new Date(ws.start_date) > today);
     const ongoing = workshops.filter((ws) => new Date(ws.start_date) <= today && new Date(ws.end_date) >= today);
     const completed = workshops.filter((ws) => new Date(ws.end_date) < today);
 
-    return { upcoming, ongoing, completed };
+    return { ongoing, completed };
   };
 
   const getTotalPhotos = async() => {
@@ -48,15 +45,13 @@ const Dashboard = () => {
   }
 
   const totalAlbums = new Set(photos.map(item => item.album_id)).size;
-  console.log(totalAlbums);
 
 
   // Fetch Journal
   const getDataJournal = async () => {
     try {
-      const { data, count } = await getJournal("", 1, 100000);
+      const { data } = await getJournal("", 1, 100000);
       setJournals(data || []);
-      setTotalJournalItems(count || 0);
     } catch (error) {
       Swal.fire("error", `Journal Gagal diload${error}`, "error");
     }
@@ -67,11 +62,12 @@ const Dashboard = () => {
       try {
         const { data } = await getWorkshopResults(); // ambil banyak data
         setResults(data);
-        console.log("data from dashboard", results);
+        
         // hitung status langsung di sini
         const lulus = results.filter((r) => r.status === "lulus").length;
         const tidakLulus = results.filter((r) => r.status === "tidak_lulus").length;
-
+        const workshopResultByworkshop = [...new Set(results.map(r => r.workshop_name))].length;
+        setWorkshopResultByworkshop(workshopResultByworkshop)
         setTotalLulus(lulus);
         setTotalTidakLulus(tidakLulus);
       } catch (err) {
@@ -79,11 +75,9 @@ const Dashboard = () => {
       }
     };
     if (workshop.length > 0) {
-      const { upcoming, ongoing, completed } = categorizeWorkshops(workshop);
-      setUpcoming(upcoming);
+      const { ongoing, completed } = categorizeWorkshops(workshop);
       setOngoing(ongoing);
       setCompleted(completed);
-      console.log("Upcoming:", upcoming);
       console.log("Ongoing:", ongoing);
       console.log("Completed:", completed);
     }
@@ -103,13 +97,7 @@ const Dashboard = () => {
           </div>
           <p className="text-4xl text-center mt-2">{workshop.length}</p>
         </div>
-        <div className="w-[24%] h-28 p-2 text-sm font-bold border shadow bg-blue-50 rounded">
-          <div className="flex justify-between">
-            <h3>Workshop Upcoming</h3>
-            <IconCalendarClock />
-          </div>
-          <p className="text-4xl text-center mt-2">{upcoming.length}</p>
-        </div>
+       
         <div className="w-[24%] h-28 p-2 text-sm font-bold border shadow bg-purple-50 rounded">
           <div className="flex justify-between">
             <h3>Workshop Ongoing</h3>
@@ -131,10 +119,10 @@ const Dashboard = () => {
         <div className=" w-[24%] mt-10 flex flex-col space-y-2 pb-4">
           <div className=" h-24 p-2 text-sm font-bold shadow rounded border ">
             <div className="flex justify-between">
-              <h3>Total Result</h3>
+              <h3>Workshops with Results</h3>
               <IconBooks />
             </div>
-            <p className="text-4xl text-center mt-2">{results.length}</p>
+            <p className="text-4xl text-center mt-2">{workshopResultByworkshop}</p>
           </div>
           <div className=" h-24 p-2 text-sm font-bold shadow rounded border bg-green-300 ">
             <div className="flex justify-between">

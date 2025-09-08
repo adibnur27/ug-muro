@@ -1,137 +1,179 @@
-  import React, { useEffect, useState } from "react";
-  import { Link, Outlet, useNavigate } from "react-router-dom";
-  import { checkIsAdmin, logout } from "../../service/authService";
-  import { Sidebar, SidebarBody, SidebarLink } from "../../component/ui/sidebar"; // sesuaikan pathnya jika beda
-  import { IconLayoutDashboard, IconLogout, IconNotebook, IconPhoto, IconReportSearch, IconTools, IconUser, IconUsersGroup } from "@tabler/icons-react";
-  import { motion } from "framer-motion"; // atau dari motion/react kalau kamu pakai motion/react
-  import { cn } from "@/lib/utils";
-  import { LoaderOne } from "../../component/ui/loader";
-  import Swal from "sweetalert2";
+import React, { useEffect, useState } from "react";
+import { Link, Outlet, useNavigate } from "react-router-dom";
+import { checkIsAdmin, logout } from "../../service/authService";
+import { 
+  IconLayoutDashboard, 
+  IconLogout, 
+  IconNotebook, 
+  IconPhoto, 
+  IconReportSearch, 
+  IconTools, 
+  IconUser, 
+  IconUsersGroup 
+} from "@tabler/icons-react";
+import { LoaderOne } from "../../component/ui/loader";
+import Swal from "sweetalert2";
 import ButtonLogout from "../../component/Button/ButtonLogout";
 
-  const AdminDashboard = () => {
-    const [user, setUser] = useState(null);
-    const [accessToken, setAccessToken] = useState("");
-    const [loading, setLoading] = useState(true);
-    const [open, setOpen] = useState(true);
-    const navigate = useNavigate();
+const AdminDashboard = () => {
+  const [user, setUser] = useState(null);
+  const [accessToken, setAccessToken] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const navigate = useNavigate();
 
-    useEffect(() => {
-      const fetchAdminData = async () => {
-        try {
-          const { user, accessToken } = await checkIsAdmin();
-          setUser(user);
-          setAccessToken(accessToken);
-        } catch (error) {
-          Swal.fire({
-            icon: "error",
-            title: "Anda belum login",
-            text: error.response?.data?.message || "Silahkan login terlebih dahulu.",
-          });
-          navigate("/adminLogin");
-        } finally {
-          setLoading(false);
-        }
-      };
-      fetchAdminData();
-    }, [navigate]);
-
-    const handleLogout = async () => {
-      await logout();
-      navigate("/adminLogin");
+  useEffect(() => {
+    const fetchAdminData = async () => {
+      try {
+        const { user, accessToken } = await checkIsAdmin();
+        setUser(user);
+        setAccessToken(accessToken);
+      } catch (error) {
+        Swal.fire({
+          icon: "error",
+          title: "Anda belum login",
+          text: error.response?.data?.message || "Silahkan login terlebih dahulu.",
+        });
+        navigate("/adminLogin");
+      } finally {
+        setLoading(false);
+      }
     };
 
-    const links = [
-      {
-        label: "Dashboard",
-        href: "/admin",
-        icon: <IconLayoutDashboard className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />,
-      },
-      {
-        label: "Participants",
-        href: "/admin/participants",
-        icon: <IconUsersGroup className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />,
-      },
-      {
-        label: "Workshop",
-        href: "/admin/workshop",
-        icon: <IconTools className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />,
-      },
-      {
-        label: "Workshop Result",
-        href: "/admin/workshopResult",
-        icon: <IconReportSearch className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />,
-      },
-      {
-        label: "Journal",
-        href: "/admin/journal",
-        icon: <IconNotebook className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />,
-      },
-      {
-        label: "Album & Photos",
-        href: "/admin/albums",
-        icon: <IconPhoto className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />,
-      },
-    ];
+    fetchAdminData();
+  }, [navigate]);
 
-    if (loading)
-      return (
-        <div className="absolute top-0 bottom-0 right-0 left-0 flex justify-center items-center bg-black/50">
-          <LoaderOne />
-        </div>
-      );
-
-    return (
-      <div className={cn("flex w-full h-screen gap-3 p-2 bg-gradient-to-b from-blue-50 via-blue-50 to-blue-50")}>
-        <Sidebar open={open} setOpen={setOpen}>
-          <SidebarBody className="justify-between gap-10 bg-gray-50 rounded border font-roboto">
-            <div className="flex flex-1 flex-col overflow-x-hidden overflow-y-auto ">
-              {open ? <Logo /> : <LogoIcon />}
-              <div className="mt-8 flex flex-col gap-2">
-                {links.map((link, idx) => {
-                  if (link.onClick) {
-                    // Tombol logout
-                    return (
-                      <div key={idx} onClick={link.onClick} className="hover:bg-blue-50 px-1 cursor-pointer">
-                        <SidebarLink link={link} />
-                      </div>
-                    );
-                  } else {
-                    // Navigasi menggunakan Link react-router
-                    return (
-                      <Link key={idx} to={link.href} className="hover:bg-blue-50 px-1">
-                        <SidebarLink link={link} />
-                      </Link>
-                    );
-                  }
-                })}
-              </div>
-            </div>
-            <ButtonLogout onClick={handleLogout}/>
-          </SidebarBody>
-        </Sidebar>
-
-        {/* Dashboard content area */}
-        <div className="flex flex-1 flex-col px-5 py-2 bg-gray-50 dark:bg-neutral-900 border rounded overflow-x-hidden overflow-y-scroll font-roboto">
-          <Outlet />
-        </div>
-      </div>
-    );
+  const handleLogout = async () => {
+    await logout();
+    navigate("/adminLogin");
   };
 
-  const Logo = () => (
-    <a href="#" className="flex items-center space-x-2 text-sm font-normal text-black py-1">
-      <img src="/images/logo.png" className="h-7 w-7 shrink-0 rounded-full" alt="Avatar" />
-      <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="font-medium text-black dark:text-white">
-        UG MURO
-      </motion.span>
-    </a>
-  );
+  const navigationItems = [
+    {
+      label: "Dashboard",
+      href: "/admin",
+      icon: <IconLayoutDashboard className="h-5 w-5 shrink-0" />,
+    },
+    {
+      label: "Workshop",
+      href: "/admin/workshop",
+      icon: <IconTools className="h-5 w-5 shrink-0" />,
+    },
+    {
+      label: "Workshop Result",
+      href: "/admin/workshopResult",
+      icon: <IconReportSearch className="h-5 w-5 shrink-0" />,
+    },
+    {
+      label: "Journal",
+      href: "/admin/journal",
+      icon: <IconNotebook className="h-5 w-5 shrink-0" />,
+    },
+    {
+      label: "Album & Photos",
+      href: "/admin/albums",
+      icon: <IconPhoto className="h-5 w-5 shrink-0" />,
+    },
+  ];
 
-  const LogoIcon = () => (
-    <a href="#" className="flex items-center space-x-2 text-sm font-normal text-black py-1">
-      <img src="/images/logo.png" className="h-7 w-7 shrink-0 rounded-full" alt="Avatar" />
-    </a>
-  );
+  if (loading) {
+    return (
+      <div className="absolute top-0 bottom-0 right-0 left-0 flex justify-center items-center bg-black/50">
+        <LoaderOne />
+      </div>
+    );
+  }
 
-  export default AdminDashboard;
+  return (
+    <div className="flex w-full h-screen bg-gradient-to-b from-blue-50 via-blue-50 to-blue-50 font-roboto">
+      {/* Navigation Sidebar */}
+      <nav 
+        className={`
+          ${sidebarOpen ? 'w-64' : 'w-16'} 
+          bg-gray-50 border-r border-gray-200 transition-all duration-300 ease-in-out
+          flex flex-col p-4
+        `}
+      >
+        {/* Logo Section */}
+        <div className="flex items-center space-x-3 mb-8">
+          <img 
+            src="/images/logo.png" 
+            className="h-8 w-8 shrink-0 rounded-full" 
+            alt="Logo" 
+          />
+          {sidebarOpen && (
+            <span className="font-medium text-black text-lg">
+              UG MURO
+            </span>
+          )}
+        </div>
+
+        {/* Toggle Button */}
+        <button
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+          className="mb-6 p-2 rounded-lg hover:bg-gray-100 transition-colors"
+        >
+          <div className="w-5 h-5 flex flex-col justify-center space-y-1">
+            <div className="w-full h-0.5 bg-gray-600"></div>
+            <div className="w-full h-0.5 bg-gray-600"></div>
+            <div className="w-full h-0.5 bg-gray-600"></div>
+          </div>
+        </button>
+
+        {/* Navigation Links */}
+        <div className="flex-1 space-y-2">
+          {navigationItems.map((item, index) => (
+            <Link
+              key={index}
+              to={item.href}
+              className="
+                flex items-center space-x-3 px-3 py-3 rounded-lg
+                text-gray-700 hover:bg-blue-100 hover:text-blue-700
+                transition-colors duration-200
+                group
+              "
+            >
+              <div className="text-gray-600 group-hover:text-blue-700">
+                {item.icon}
+              </div>
+              {sidebarOpen && (
+                <span className="font-medium">{item.label}</span>
+              )}
+            </Link>
+          ))}
+        </div>
+
+        {/* Logout Button */}
+        <div className="mt-auto pt-4 border-t border-gray-200">
+          <ButtonLogout onClick={handleLogout} />
+        </div>
+      </nav>
+
+      {/* Main Content Area */}
+      <main className="flex-1 flex flex-col bg-gray-50 overflow-hidden">
+        {/* Header */}
+        <header className="bg-white border-b border-gray-200 px-6 py-4">
+          <div className="flex items-center justify-between">
+            <h1 className="text-xl font-semibold text-gray-800">
+              Admin Dashboard
+            </h1>
+            {user && (
+              <div className="flex items-center space-x-3">
+                <span className="text-sm text-gray-600">
+                  Welcome, {user.name || 'Admin'}
+                </span>
+              </div>
+            )}
+          </div>
+        </header>
+
+        {/* Content Body */}
+        <div className="flex-1 p-6 overflow-auto">
+          <Outlet />
+        </div>
+      </main>
+    </div>
+  );
+};
+
+export default AdminDashboard;

@@ -6,7 +6,6 @@ import { useWorkshop } from "../../../../../context/WorkshopContext/WorkshopCont
 export default function WorkshopResultForm({ initialData = null, onClose }) {
   const { workshop } = useWorkshop();
 
-  console.log("from form", workshop);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -19,7 +18,6 @@ export default function WorkshopResultForm({ initialData = null, onClose }) {
   });
   const [loading, setLoading] = useState(false);
 
-  console.log("from workshopresult form", initialData);
 
   // Status options
   const statusOptions = [

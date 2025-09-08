@@ -125,7 +125,9 @@ export default function WorkshopResult() {
     getDataWorkshopResults(searchQuery, page);
   };
 
-  const handleUploadSuccess = () => setReload(!reload);
+  const handleUploadSuccess = async() => {
+    await getDataWorkshopResults(searchQuery, page);
+  };
 
   const handleAddNew = () => {
     setSelectedResult(null);

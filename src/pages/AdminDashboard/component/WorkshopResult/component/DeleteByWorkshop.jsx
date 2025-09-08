@@ -7,7 +7,10 @@ export default function DeleteByWorkshop({ categories, onDeleted }) {
 
 
   const handleDeleteByWorkshop = async () => {
-    if (!selectedWorkshop) return;
+    if (!selectedWorkshop) {
+      Swal.fire("error", "silahkan Pilih Workshop Terlebih Dahulu", "error")
+      return;
+    };
 
     const confirmDelete = await Swal.fire({
       title: "Yakin hapus semua?",
@@ -58,7 +61,6 @@ export default function DeleteByWorkshop({ categories, onDeleted }) {
       <button
         onClick={handleDeleteByWorkshop}
         className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded"
-        disabled={!selectedWorkshop}
       >
         Hapus Semua
       </button>
