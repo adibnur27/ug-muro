@@ -47,7 +47,7 @@ export default function WorkshopResultFilter({
             <option value="">Semua Status</option>
             <option value="lulus">Lulus</option>
             <option value="tidak_lulus">Tidak Lulus</option>
-            <option value="belum_dinilai">Belum Dinilai</option>
+            <option value="belum_dinilai">Pending</option>
           </select>
         </div>
 
@@ -63,7 +63,7 @@ export default function WorkshopResultFilter({
       </div>
 
       {/* Filter Summary */}
-      <div className="mt-3 text-sm text-gray-600">
+      <div className="mt-3 text-sm text-gray-600 text-end">
         <span className="font-medium">
           Showing {filteredLength} of {resultsLength} entries
         </span>

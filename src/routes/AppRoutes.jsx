@@ -20,7 +20,6 @@ import Dashboard from "../pages/AdminDashboard/component/Dashboard/Dashboard";
 import Workshop from "../pages/AdminDashboard/component/Workshop/Workshop";
 import Journal from "../pages/AdminDashboard/component/Journals/Journal";
 import Albums from "../pages/AdminDashboard/component/Albums/Albums";
-import AdminProfile from "../pages/AdminDashboard/component/AdminProfile/AdminProfile";
 import WorkshopResult from "../pages/AdminDashboard/component/WorkshopResult/WorkshopResult";
 const routes = () => {
   return (
@@ -41,7 +40,6 @@ const routes = () => {
           <Route path="workshop" element={<Workshop />} />
           <Route path="journal" element={<Journal />} />
           <Route path="albums" element={<Albums />} />
-          <Route path="adminProfile" element={<AdminProfile />} />
           <Route path="workshopResult" element={<WorkshopResult />} />
         </Route>
 

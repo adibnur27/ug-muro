@@ -96,7 +96,6 @@ const Journal = () => {
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold text-gray-400 mb-8">Journal Page</h1>
       <div className="flex gap-2 h-9 items-end justify-between">
         {/* searcBar */}
         <div className="flex gap-2">

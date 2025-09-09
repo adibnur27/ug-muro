@@ -18,7 +18,7 @@ export default function WorkshopResult() {
   const [reload, setReload] = useState(false);
 
   // workshop from context
-  const {workshop} = useWorkshop()
+  const { workshop } = useWorkshop();
 
   // Pagination States
   const [total, setTotal] = useState(0);
@@ -32,7 +32,6 @@ export default function WorkshopResult() {
   const [selectedStatus, setSelectedStatus] = useState("");
   const [searchQuery, setSearchQuery] = useState(""); // ✅ state pencarian
   console.log(searchQuery);
-
 
   const getDataWorkshopResults = async (query = "", currentPage = page) => {
     try {
@@ -125,7 +124,7 @@ export default function WorkshopResult() {
     getDataWorkshopResults(searchQuery, page);
   };
 
-  const handleUploadSuccess = async() => {
+  const handleUploadSuccess = async () => {
     await getDataWorkshopResults(searchQuery, page);
   };
 
@@ -136,34 +135,36 @@ export default function WorkshopResult() {
 
   return (
     <div className="">
-      <div className="flex justify-between items-center my-2">
-        <h1 className="text-2xl font-bold text-gray-400 ">Workshop Results</h1>
-      </div>
-      <div className="flex items-end mb-6 ">
+      <div className="flex mb-5 gap-2 ">
         {/* Search Bar */}
-        <div className="flex space-x-2 h-9">
-          <SearchBar placeholder="Cari nama, NPM, email, atau workshop..." onSearch={(q) => setSearchQuery(q)} />
-          <button onClick={handleAddNew} className="bg-blue-600 hover:bg-blue-700 text-white px-1 py-2 rounded">
+        <div className="w-1/4 p-2 rounded flex flex-col justify-between bg-blue-200">
+          <h2 className="text-sm font-semibold mb-2 text-center">
+            Add Result By Person
+          </h2>
+          <button onClick={handleAddNew} className="bg-blue-600  hover:bg-blue-700 text-white px-1 py-2 rounded">
             Add Result
           </button>
         </div>
         {/* Upload Excel */}
-        <WorkshopResultUpload onUploadSuccess={handleUploadSuccess} workshops={workshop}/>
+        <WorkshopResultUpload onUploadSuccess={handleUploadSuccess} workshops={workshop} />
 
         <DeleteByWorkshop categories={categories} onDeleted={() => getDataWorkshopResults(searchQuery, page)} />
       </div>
 
       {/* Filter Section */}
-      <WorkshopResultFilter
-        categories={categories}
-        selectedWorkshop={selectedWorkshop}
-        selectedStatus={selectedStatus}
-        onWorkshopChange={handleWorkshopChange}
-        onStatusChange={handleStatusChange}
-        onClearFilters={clearFilters}
-        resultsLength={results.length}
-        filteredLength={total} // ganti: total hasil dari DB
-      />
+      <div className="flex items-start justify-between">
+        <SearchBar placeholder="Cari nama, NPM, email, atau workshop..." onSearch={(q) => setSearchQuery(q)} />
+        <WorkshopResultFilter
+          categories={categories}
+          selectedWorkshop={selectedWorkshop}
+          selectedStatus={selectedStatus}
+          onWorkshopChange={handleWorkshopChange}
+          onStatusChange={handleStatusChange}
+          onClearFilters={clearFilters}
+          resultsLength={results.length}
+          filteredLength={total} // ganti: total hasil dari DB
+        />
+      </div>
 
       {/* List */}
       <WorkshopResultList results={results} onEdit={handleEdit} onDelete={handleDelete} currentPage={page} itemsPerPage={limit} />

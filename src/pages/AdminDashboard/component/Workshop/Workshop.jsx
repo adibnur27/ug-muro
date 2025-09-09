@@ -125,9 +125,6 @@ const Workshop = () => {
         </div>
       )}
 
-      <div className="my-2 mb-10">
-        <h2 className="text-2xl font-bold text-gray-400">Workshop List</h2>
-      </div>
 
       {/* Search */}
       <div className="flex justify-between items-center mb-4">

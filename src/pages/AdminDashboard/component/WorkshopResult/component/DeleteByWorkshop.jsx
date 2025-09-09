@@ -45,7 +45,8 @@ export default function DeleteByWorkshop({ categories, onDeleted }) {
   };
 
   return (
-    <div className="flex space-x-2">
+    <div className="bg-red-200 p-2 w-[25%] rounded flex flex-col">
+      <h2 className="text-sm font-semibold mb-2 text-center">Upload Data Workshop</h2>
       <select
         value={selectedWorkshop}
         onChange={(e) => setSelectedWorkshop(e.target.value)}
@@ -60,7 +61,7 @@ export default function DeleteByWorkshop({ categories, onDeleted }) {
       </select>
       <button
         onClick={handleDeleteByWorkshop}
-        className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded"
+        className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded w-full"
       >
         Hapus Semua
       </button>

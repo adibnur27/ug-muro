@@ -44,8 +44,8 @@ export default function WorkshopResultDownloadList() {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-      {workshops.map((w) => (
-        <div key={w} className="bg-white shadow rounded-lg p-4 flex flex-col justify-between">
+      {workshops.map((w,i) => (
+        <div key={`${i}${w.title}_${w.start_date}_${w.end_date}`} className="bg-white shadow rounded-lg p-4 flex flex-col justify-between">
           <h3 className="font-semibold text-black text-center text-lg mb-2">{w.workshop_name}</h3>
           <p className="text-sm text-black mb-2">
             <span className="text-black font-bold">Tanggal Mulai:</span> {w.start_date}

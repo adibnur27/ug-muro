@@ -5,6 +5,7 @@ import { SparklesCore } from "../../component/ui/sparkles";
 import { getJournal } from "../../service/journalService";
 import Swal from "sweetalert2";
 import { IconBook, IconBook2, IconNotebook, IconNotebookOff } from "@tabler/icons-react";
+import ButtonActivity from "../../component/Button/ButtonActivity";
 
 const Research = () => {
   const [journals, setJournals] = useState([]);
@@ -56,9 +57,12 @@ const Research = () => {
                 <p className="text-sm text-white">
                   Tanggal Terbit: <span className="text-white font-bold">{journal.published_at}</span>
                 </p>
-                <a href={journal.file_url} className="text-sm underline text-blue-200">
+                <ButtonActivity>
+
+                <a href={journal.file_url} target="_blank" className="text-sm  text-white ">
                   Journal File
                 </a>
+                </ButtonActivity>
               </div>
               <div className="w-[18%] bg-blue-950/10 rounded-full shadow-2xl shadow-blue-950">
                 <img src="/icon/3dicons-notebook-dynamic-color.png" alt="Journal Icon" className="w-full h-auto drop-shadow-[5px_5px_20px_rgb(23,37,84)]" />

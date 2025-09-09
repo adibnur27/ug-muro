@@ -61,7 +61,7 @@ const Dashboard = () => {
     const fetchResults = async () => {
       try {
         const { data } = await getWorkshopResults(); // ambil banyak data
-        setResults(data);
+        setResults(data.slice(0,4));
         
         // hitung status langsung di sini
         const lulus = results.filter((r) => r.status === "lulus").length;
@@ -88,7 +88,6 @@ const Dashboard = () => {
   console.log("Photos From Dashboard",photos);
   return (
     <div className=" px-5">
-      <h3 className="text-2xl font-bold text-gray-400 mb-4">Dashboard Overview</h3>
       <div className="flex justify-between">
         <div className="w-[24%] h-28 p-2 text-sm font-bold shadow rounded border ">
           <div className="flex justify-between">
@@ -112,26 +111,27 @@ const Dashboard = () => {
           </div>
           <p className="text-4xl text-center mt-2">{completed.length}</p>
         </div>
-      </div>
-
-      <div className="flex justify-between mt-4">
-        <ResultListTable results={results} />
-        <div className=" w-[24%] mt-10 flex flex-col space-y-2 pb-4">
-          <div className=" h-24 p-2 text-sm font-bold shadow rounded border ">
+        <div className="w-[24%] h-28 p-2 text-sm font-bold shadow rounded border ">
             <div className="flex justify-between">
               <h3>Workshops with Results</h3>
               <IconBooks />
             </div>
             <p className="text-4xl text-center mt-2">{workshopResultByworkshop}</p>
           </div>
-          <div className=" h-24 p-2 text-sm font-bold shadow rounded border bg-green-300 ">
-            <div className="flex justify-between">
+      </div>
+
+      <div className="flex justify-between mt-4">
+        <ResultListTable results={results} />
+        <div className=" w-[24%] mt-10 flex flex-col space-y-2 pb-4">
+          
+          <div className=" h-1/2 p-2 flex flex-col gap-3 text-sm font-bold shadow rounded border bg-green-300 ">
+            <div className="flex justify-between items-center">
               <h3>Total Participant Lulus</h3>
               <IconBooks />
             </div>
             <p className="text-4xl text-center mt-2">{TotalLulus}</p>
           </div>
-          <div className=" h-24 p-2 text-sm font-bold shadow rounded border bg-red-300">
+          <div className=" h-1/2 p-2 flex flex-col gap-3 text-sm font-bold shadow rounded border bg-red-300">
             <div className="flex justify-between">
               <h3>Total Participant Tidak Lulus</h3>
               <IconBooks />

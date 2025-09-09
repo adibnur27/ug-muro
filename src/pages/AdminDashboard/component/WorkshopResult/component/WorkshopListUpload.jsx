@@ -62,9 +62,9 @@ export default function WorkshopListUpload({ onUploadSuccess, workshops }) {
   
 
   return (
-    <div className="flex justify-end rounded bg-white w-[1/2] space-x-2 box-border">
+    <div className="flex justify-evenly gap-2 rounded w-[1/2] box-border">
       {/* Upload File */}
-      <div className="bg-blue-200 p-2 w-[45%] rounded">
+      <div className="bg-blue-200 p-2 rounded w-1/2">
         <h2 className="text-sm font-semibold mb-2 text-center">Upload Data Workshop</h2>
         <input
           ref={fileInputRef}
@@ -83,7 +83,7 @@ export default function WorkshopListUpload({ onUploadSuccess, workshops }) {
       </div>
 
       {/* Download Template */}
-      <div className="bg-green-200 p-2 w-[45%] rounded">
+      <div className="bg-green-200 p-2 rounded w-1/2">
         <h2 className="text-sm font-semibold mb-2 text-center">Download Data Workshop</h2>
         <select
           value={selectedWorkshopId}
